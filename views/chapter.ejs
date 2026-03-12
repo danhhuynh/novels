@@ -1,0 +1,163 @@
+<%- include('partials/header') %>
+
+<div class="chapter-reading-page">
+    <div class="chapter-header">
+        <div class="chapter-nav-top">
+            <div class="breadcrumb">
+                <a href="/">Home</a> → 
+                <a href="/novels/<%= novel.id %>"><%= novel.title %></a> → 
+                Chapter <%= chapterNumber %>
+            </div>
+            <div class="chapter-info-header">
+                <h1 class="chapter-title-main">
+                    <%= novel.title %>
+                </h1>
+                <h2 class="chapter-subtitle">
+                    Chapter <%= chapterNumber %>: <%= chapter.title %>
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="chapter-navigation">
+        <div class="nav-container">
+            <div class="nav-left">
+                <% if (navigation.hasPrevious) { %>
+                    <a href="/chapters/<%= novel.id %>/<%= navigation.previousChapter %>" 
+                       class="btn btn-nav" id="prev-btn">
+                        ← Previous
+                    </a>
+                <% } %>
+            </div>
+
+            <div class="nav-center">
+                <div class="chapter-selector">
+                    <label for="chapter-select">Jump to Chapter:</label>
+                    <select id="chapter-select" onchange="jumpToChapter(this.value)">
+                        <% navigation.allChapters.forEach(ch => { %>
+                            <option value="<%= ch.number %>" <%= ch.number === chapterNumber ? 'selected' : '' %>>
+                                Chapter <%= ch.number %>: <%= ch.title %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <% if (navigation.hasNext) { %>
+                    <a href="/chapters/<%= novel.id %>/<%= navigation.nextChapter %>" 
+                       class="btn btn-nav" id="next-btn">
+                        Next →
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <div class="chapter-content-section">
+        <div class="chapter-content">
+            <div class="reading-controls">
+                <div class="font-controls">
+                    <label>Font Size:</label>
+                    <button onclick="changeFontSize(-1)">A-</button>
+                    <span id="font-size-display">16px</span>
+                    <button onclick="changeFontSize(1)">A+</button>
+                </div>
+                <div class="theme-controls">
+                    <label>Theme:</label>
+                    <button onclick="toggleTheme()" id="theme-toggle">🌙</button>
+                </div>
+            </div>
+            
+            <article class="chapter-text" id="chapter-text">
+                <%- chapterContent %>
+            </article>
+        </div>
+    </div>
+
+    <div class="chapter-navigation bottom-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/novels/<%= novel.id %>" class="btn btn-outline">
+                    ← Back to Chapters
+                </a>
+            </div>
+
+            <div class="nav-center">
+                <span class="chapter-progress">
+                    Chapter <%= chapterNumber %> of <%= navigation.totalChapters %>
+                </span>
+            </div>
+
+            <div class="nav-right">
+                <% if (navigation.hasNext) { %>
+                    <a href="/chapters/<%= novel.id %>/<%= navigation.nextChapter %>" 
+                       class="btn btn-primary">
+                        Continue Reading →
+                    </a>
+                <% } else { %>
+                    <span class="end-message">You've reached the end!</span>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function jumpToChapter(chapterNumber) {
+    if (chapterNumber && chapterNumber !== '<%= chapterNumber %>') {
+        window.location.href = `/chapters/<%= novel.id %>/${chapterNumber}`;
+    }
+}
+
+// Reading preferences
+let fontSize = 16;
+let isDarkTheme = false;
+
+function changeFontSize(delta) {
+    fontSize = Math.max(12, Math.min(24, fontSize + delta));
+    document.getElementById('chapter-text').style.fontSize = fontSize + 'px';
+    document.getElementById('font-size-display').textContent = fontSize + 'px';
+    localStorage.setItem('fontSize', fontSize);
+}
+
+function toggleTheme() {
+    isDarkTheme = !isDarkTheme;
+    document.body.classList.toggle('dark-theme', isDarkTheme);
+    document.getElementById('theme-toggle').textContent = isDarkTheme ? '☀️' : '🌙';
+    localStorage.setItem('isDarkTheme', isDarkTheme);
+}
+
+// Load saved preferences
+window.addEventListener('load', function() {
+    const savedFontSize = localStorage.getItem('fontSize');
+    const savedTheme = localStorage.getItem('isDarkTheme');
+    
+    if (savedFontSize) {
+        fontSize = parseInt(savedFontSize);
+        document.getElementById('chapter-text').style.fontSize = fontSize + 'px';
+        document.getElementById('font-size-display').textContent = fontSize + 'px';
+    }
+    
+    if (savedTheme === 'true') {
+        isDarkTheme = true;
+        document.body.classList.add('dark-theme');
+        document.getElementById('theme-toggle').textContent = '☀️';
+    }
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey || event.metaKey) return; // Ignore shortcuts
+    
+    if (event.key === 'ArrowLeft' || event.key === 'h') {
+        const prevBtn = document.getElementById('prev-btn');
+        if (prevBtn) prevBtn.click();
+    } else if (event.key === 'ArrowRight' || event.key === 'l') {
+        const nextBtn = document.getElementById('next-btn');
+        if (nextBtn) nextBtn.click();
+    }
+});
+</script>
+
+<%- include('partials/footer') %>
