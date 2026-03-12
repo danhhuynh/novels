@@ -1,15 +1,16 @@
-const AWS = require('aws-sdk');
+const { S3Client, GetObjectCommand, HeadObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 
 class S3Service {
   constructor() {
-    // Configure AWS SDK
-    AWS.config.update({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    // Configure AWS SDK v3
+    this.s3Client = new S3Client({
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
       region: process.env.S3_REGION
     });
 
-    this.s3 = new AWS.S3();
     this.bucketName = process.env.S3_BUCKET_NAME;
   }
 
@@ -27,19 +28,26 @@ class S3Service {
       
       console.log(`Fetching chapter content from S3: ${key}`);
 
-      const params = {
+      const command = new GetObjectCommand({
         Bucket: this.bucketName,
         Key: key
-      };
+      });
 
-      const response = await this.s3.getObject(params).promise();
-      return response.Body.toString('utf-8');
+      const response = await this.s3Client.send(command);
+      const chunks = [];
+      
+      // Convert the readable stream to string
+      for await (const chunk of response.Body) {
+        chunks.push(chunk);
+      }
+      
+      return Buffer.concat(chunks).toString('utf-8');
     } catch (error) {
       console.error('Error fetching chapter from S3:', error);
       
-      if (error.code === 'NoSuchKey') {
+      if (error.name === 'NoSuchKey') {
         throw new Error('Chapter not found');
-      } else if (error.code === 'AccessDenied') {
+      } else if (error.name === 'AccessDenied') {
         throw new Error('Access denied to S3 bucket');
       } else {
         throw new Error('Failed to fetch chapter content');
@@ -57,15 +65,15 @@ class S3Service {
     try {
       const key = `novels/${novelId}/chapters/chapter-${chapterNumber}.txt`;
       
-      const params = {
+      const command = new HeadObjectCommand({
         Bucket: this.bucketName,
         Key: key
-      };
+      });
 
-      await this.s3.headObject(params).promise();
+      await this.s3Client.send(command);
       return true;
     } catch (error) {
-      if (error.code === 'NotFound' || error.code === 'NoSuchKey') {
+      if (error.name === 'NotFound' || error.name === 'NoSuchKey') {
         return false;
       }
       throw error;
@@ -79,13 +87,13 @@ class S3Service {
    */
   async getAvailableChapters(novelId) {
     try {
-      const params = {
+      const command = new ListObjectsV2Command({
         Bucket: this.bucketName,
         Prefix: `novels/${novelId}/chapters/`,
         Delimiter: '/'
-      };
+      });
 
-      const response = await this.s3.listObjectsV2(params).promise();
+      const response = await this.s3Client.send(command);
       const chapters = [];
 
       if (response.Contents) {

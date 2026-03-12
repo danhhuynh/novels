@@ -18,7 +18,7 @@ A server-side rendered (SSR) Node.js application for reading novels with chapter
 
 - **Backend**: Node.js with Express
 - **Templating**: EJS for server-side rendering
-- **Storage**: AWS S3 for chapter content
+- **Storage**: AWS S3 for chapter content (using AWS SDK v3)
 - **Styling**: Modern CSS with CSS Grid and Flexbox
 - **Security**: Helmet, rate limiting, and content security policies
 
