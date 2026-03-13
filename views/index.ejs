@@ -1,108 +1,69 @@
 <%- include('partials/header') %>
 
-<div class="homepage">
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Welcome to NovelReads</h1>
-            <p>Discover amazing novels and immerse yourself in great stories</p>
-        </div>
-    </section>
-
-    <section class="search-section">
-        <div class="search-container">
-            <div class="search-box">
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    placeholder="Search novels by title, author, or genre..." 
-                    value="<%= searchQuery %>"
-                    autocomplete="off"
-                >
-                <button type="button" id="search-btn">
-                    🔍 Search
-                </button>
-                <% if (searchQuery) { %>
-                    <button type="button" id="clear-search" title="Clear search">
-                        ✖
-                    </button>
-                <% } %>
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Discover Your Next Great Read</h2>
+                <p class="hero-subtitle">Explore our curated collection of novels</p>
             </div>
-            
-            <% if (searchQuery) { %>
-                <div class="search-results-info">
-                    Found <%= searchResultsCount %> novel<%= searchResultsCount !== 1 ? 's' : '' %> 
-                    for "<%= searchQuery %>"
+
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="Search by title, author, or genre...">
+                    <button id="searchBtn" class="search-btn">🔍 Search</button>
+                    <button id="showAllBtn" class="show-all-btn">Show All</button>
                 </div>
-            <% } %>
+            </div>
         </div>
     </section>
 
     <section class="novels-section">
-        <div class="novels-container">
-            <% if (novels.length === 0) { %>
-                <div class="no-results">
-                    <h3>No novels found</h3>
-                    <p>Try adjusting your search terms or browse all novels.</p>
-                    <a href="/" class="btn btn-primary">View All Novels</a>
-                </div>
-            <% } else { %>
-                <div class="novels-grid" id="novels-grid">
-                    <% novels.forEach(novel => { %>
+        <div class="container">
+            <div class="novels-grid" id="novelsGrid">
+                <% if (novels && novels.length> 0) { %>
+                    <% novels.forEach(novel=> { %>
                         <div class="novel-card">
-                            <div class="novel-cover">
-                                <div class="cover-placeholder">
-                                    📖
-                                </div>
-                            </div>
-                            <div class="novel-info">
-                                <h3 class="novel-title">
-                                    <a href="/novels/<%= novel.id %>"><%= novel.title %></a>
-                                </h3>
-                                <p class="novel-author">by <%= novel.author %></p>
-                                <p class="novel-genre">
-                                    <span class="genre-tag"><%= novel.genre %></span>
-                                </p>
-                                <p class="novel-description"><%= novel.description %></p>
-                                <div class="novel-stats">
-                                    <span class="chapters-count">
-                                        <%= novel.totalChapters %> chapter<%= novel.totalChapters !== 1 ? 's' : '' %>
-                                    </span>
-                                    <span class="status-badge status-<%= novel.status.toLowerCase() %>">
-                                        <%= novel.status %>
-                                    </span>
-                                </div>
-                                <div class="novel-actions">
-                                    <a href="/novels/<%= novel.id %>" class="btn btn-primary">
-                                        View Chapters
+                            <div class="novel-card-header">
+                                <h2 class="novel-title">
+                                    <a href="/novels/<%= novel.id %>">
+                                        <%= novel.title %>
                                     </a>
-                                    <% if (novel.chapters.length > 0) { %>
-                                        <a href="/chapters/<%= novel.id %>/1" class="btn btn-secondary">
-                                            Start Reading
-                                        </a>
-                                    <% } %>
-                                </div>
+                                </h2>
+                                <p class="novel-author">by <%= novel.author %>
+                                </p>
+                            </div>
+                            <div class="novel-genre">
+                                <span class="genre-tag">
+                                    <%= novel.genre %>
+                                </span>
+                            </div>
+                            <p class="novel-description">
+                                <%= novel.description || 'No description available.' %>
+                            </p>
+                            <div class="novel-meta">
+                                <span>📊 <%= novel.status %></span>
+                                <span>📖 <%= novel.totalChapters || 'Unknown' %> chapters</span>
+                            </div>
+                            <div class="novel-actions">
+                                <% if (novel.chapters && novel.chapters.length> 0) { %>
+                                    <a href="/chapters/<%= novel.id %>/1" class="btn-primary">Start Reading</a>
+                                    <% } else { %>
+                                        <a href="/novels/<%= novel.id %>" class="btn-primary">View Details</a>
+                                        <% } %>
+                                            <a href="/novels/<%= novel.id %>" class="btn-secondary">Details</a>
                             </div>
                         </div>
-                    <% }) %>
-                </div>
-            <% } %>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="empty-state">
+                                    <div class="empty-icon">📭</div>
+                                    <h3>No novels found</h3>
+                                    <p>Check back later for new additions!</p>
+                                </div>
+                                <% } %>
+            </div>
         </div>
     </section>
 
-    <% if (genres.length > 0) { %>
-        <section class="genres-section" id="genres">
-            <div class="genres-container">
-                <h2>Browse by Genre</h2>
-                <div class="genres-grid">
-                    <% genres.forEach(genre => { %>
-                        <a href="/novels/genre/<%= encodeURIComponent(genre.toLowerCase()) %>" class="genre-card">
-                            <span class="genre-name"><%= genre %></span>
-                        </a>
-                    <% }) %>
-                </div>
-            </div>
-        </section>
-    <% } %>
-</div>
-
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>

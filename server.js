@@ -9,6 +9,7 @@ require('dotenv').config();
 const indexRouter = require('./routes/index');
 const novelsRouter = require('./routes/novels');
 const chaptersRouter = require('./routes/chapters');
+const { initializeDb } = require('./database/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,8 +19,10 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrcAttr: ["'unsafe-inline'"], // Allow onclick handlers
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
     },
   },
@@ -31,7 +34,7 @@ app.use(compression());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 1000, // increased for debugging
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
@@ -49,6 +52,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/', indexRouter);
+app.use('/api', indexRouter); // This will map /api/novels and /api/search correctly now
 app.use('/novels', novelsRouter);
 app.use('/chapters', chaptersRouter);
 
@@ -71,9 +75,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Novel reading website is running on port ${PORT}`);
-  console.log(`Visit: http://localhost:${PORT}`);
+// Initialize database, then start server
+initializeDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Novel reading website is running on port ${PORT}`);
+    console.log(`Visit: http://localhost:${PORT}`);
+  });
+}).catch(err => {
+  console.error('Failed to initialize database:', err);
+  process.exit(1);
 });
 
 module.exports = app;

@@ -2,15 +2,24 @@
   "name": "novels-app",
   "version": "1.0.0",
   "description": "Novel reading application with SQLite database",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node server.js",
     "seed": "node database/seed.js",
-    "dev": "node app.js"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "sqlite3": "^5.1.6",
     "aws-sdk": "^2.1490.0",
-    "dotenv": "^16.3.1"
+    "compression": "^1.7.4",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^5.2.1",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^7.0.0",
+    "sqlite3": "^5.1.6",
+    "@aws-sdk/client-s3": "^3.491.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

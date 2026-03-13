@@ -1,825 +1,984 @@
-/* CSS Reset and Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ===== RESET & BASE ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 :root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --secondary-color: #64748b;
-    --accent-color: #f59e0b;
-    --background-color: #ffffff;
-    --surface-color: #f8fafc;
-    --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --border-color: #e5e7eb;
-    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --border-radius: 8px;
-    --max-width: 1200px;
-    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-/* Dark Theme Variables */
-.dark-theme {
-    --background-color: #111827;
-    --surface-color: #1f2937;
-    --text-primary: #f9fafb;
-    --text-secondary: #d1d5db;
-    --border-color: #374151;
-    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --bg-primary: #0f0d1b;
+  --bg-secondary: #1a1625;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-hover: rgba(255, 255, 255, 0.08);
+  --bg-glass: rgba(255, 255, 255, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-primary: #e8e4f0;
+  --text-secondary: #9b93ab;
+  --text-muted: #6b6478;
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --accent-glow: rgba(139, 92, 246, 0.25);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6, #6366f1);
+  --gradient-bg: linear-gradient(160deg, #0f0d1b 0%, #1a1625 40%, #1e1533 100%);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 40px var(--accent-glow);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 body {
-    font-family: var(--font-family);
-    line-height: 1.6;
-    color: var(--text-primary);
-    background-color: var(--background-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: var(--font);
+  background: var(--gradient-bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Header Styles */
+a {
+  color: var(--accent-light);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: #c4b5fd;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== NAVBAR ===== */
 .header {
-    background-color: var(--surface-color);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: var(--shadow);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 13, 27, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-glass);
 }
 
 .navbar {
-    padding: 0 1rem;
+  padding: 0;
 }
 
 .nav-container {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
 }
 
 .nav-logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.nav-logo:hover {
+  color: var(--text-primary);
+}
+
+.logo-icon {
+  font-size: 1.6rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.logo-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .nav-menu {
-    display: flex;
-    gap: 2rem;
+  display: flex;
+  gap: 28px;
 }
 
 .nav-link {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  border-radius: 1px;
+  transition: width var(--transition);
 }
 
 .nav-link:hover {
-    color: var(--primary-color);
+  color: var(--text-primary);
 }
 
-/* Main Content */
-.main-content {
-    min-height: calc(100vh - 120px);
-    padding: 2rem 1rem;
+.nav-link:hover::after {
+  width: 100%;
 }
 
-/* Hero Section */
-.hero {
-    text-align: center;
-    padding: 3rem 0;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-    color: white;
-    margin: -2rem -1rem 2rem;
+/* ===== HERO SECTION ===== */
+.hero-section {
+  padding: 3rem 0 1.5rem;
+  text-align: center;
 }
 
-.hero-content h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #e8e4f0, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.hero-content p {
-    font-size: 1.2rem;
-    opacity: 0.9;
+.hero-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
 }
 
-/* Search Section */
+/* ===== SEARCH ===== */
 .search-section {
-    max-width: var(--max-width);
-    margin: 0 auto 3rem;
+  margin-bottom: 1rem;
 }
 
 .search-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.search-box {
-    display: flex;
-    gap: 0.5rem;
-    position: relative;
+.search-input {
+  flex: 1;
+  min-width: 240px;
+  padding: 14px 20px;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: var(--font);
+  outline: none;
+  transition: all var(--transition);
 }
 
-#search-input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    background-color: var(--background-color);
-    color: var(--text-primary);
-    transition: border-color 0.2s ease;
+.search-input::placeholder {
+  color: var(--text-muted);
 }
 
-#search-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow), var(--shadow-sm);
 }
 
-.search-results-info {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    font-style: italic;
+.search-btn,
+.show-all-btn {
+  padding: 14px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
 }
 
-/* Button Styles */
-.btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
-    justify-content: center;
+.search-btn {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: var(--shadow-sm);
 }
 
-.btn-primary {
-    background-color: var(--primary-color);
-    color: white;
+.search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow), var(--shadow-md);
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-hover);
+.show-all-btn {
+  background: var(--bg-glass);
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
 }
 
-.btn-secondary {
-    background-color: var(--secondary-color);
-    color: white;
+.show-all-btn:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
-.btn-secondary:hover {
-    background-color: #475569;
-}
-
-.btn-outline {
-    background-color: transparent;
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
-}
-
-.btn-outline:hover {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.btn-small {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-}
-
-#search-btn, #clear-search {
-    padding: 0.75rem 1rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-#clear-search {
-    background-color: var(--secondary-color);
-    padding: 0.75rem;
-}
-
-/* Novels Grid */
+/* ===== NOVELS GRID ===== */
 .novels-section {
-    max-width: var(--max-width);
-    margin: 0 auto;
+  padding: 2rem 0 4rem;
 }
 
 .novels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 2rem;
 }
 
+/* ===== NOVEL CARDS ===== */
 .novel-card {
-    background-color: var(--surface-color);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
 }
 
 .novel-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+  background: var(--bg-card-hover);
+  border-color: rgba(139, 92, 246, 0.2);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(139, 92, 246, 0.08);
 }
 
-.novel-cover {
-    text-align: center;
-    margin-bottom: 1rem;
+.novel-card-header {
+  margin-bottom: 0.75rem;
 }
 
-.cover-placeholder {
-    width: 80px;
-    height: 100px;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    border-radius: var(--border-radius);
-    margin: 0 auto;
+.novel-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
 }
 
 .novel-title a {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.2rem;
+  color: var(--text-primary);
+  text-decoration: none;
 }
 
 .novel-title a:hover {
-    color: var(--primary-color);
+  color: var(--accent-light);
 }
 
 .novel-author {
-    color: var(--text-secondary);
-    margin: 0.5rem 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
-.novel-description {
-    color: var(--text-secondary);
-    margin: 1rem 0;
-    line-height: 1.5;
+.novel-genre {
+  margin-bottom: 0.75rem;
 }
 
 .genre-tag {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.8rem;
-    font-weight: 500;
+  display: inline-block;
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--accent-light);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
-.novel-stats {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 1rem 0;
-}
-
-.chapters-count {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.status-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-transform: uppercase;
-}
-
-.status-completed {
-    background-color: #10b981;
-    color: white;
-}
-
-.status-ongoing {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.novel-actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1rem;
-}
-
-.novel-actions .btn {
-    flex: 1;
-}
-
-/* No Results */
-.no-results {
-    text-align: center;
-    padding: 3rem;
-    color: var(--text-secondary);
-}
-
-.no-results h3 {
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-}
-
-/* Genres Section */
-.genres-section {
-    max-width: var(--max-width);
-    margin: 3rem auto 0;
-    padding: 2rem 0;
-}
-
-.genres-section h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: var(--text-primary);
-}
-
-.genres-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.genre-card {
-    background-color: var(--surface-color);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    text-decoration: none;
-    color: var(--text-primary);
-    text-align: center;
-    transition: all 0.2s ease;
-}
-
-.genre-card:hover {
-    border-color: var(--primary-color);
-    background-color: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* Novel Detail Page */
-.novel-header {
-    background-color: var(--surface-color);
-    border-bottom: 1px solid var(--border-color);
-    margin: -2rem -1rem 2rem;
-    padding: 2rem 1rem;
-}
-
-.novel-header-content {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2rem;
-    align-items: start;
-}
-
-.novel-cover-large {
-    text-align: center;
-}
-
-.cover-placeholder-large {
-    width: 200px;
-    height: 280px;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    border-radius: var(--border-radius);
-}
-
-.novel-title-large {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-}
-
-.novel-author-large {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
+.novel-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .novel-meta {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.novel-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary,
+.btn-secondary {
+  padding: 11px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  flex: 1;
+  min-width: 100px;
+}
+
+.btn-primary {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow), var(--shadow-md);
+  color: white;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--accent-light);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.btn-secondary:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: var(--accent);
+  color: var(--accent-light);
+  transform: translateY(-2px);
+}
+
+/* ===== LOADING & EMPTY STATES ===== */
+.loading-spinner {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-glass);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.error-state .btn-primary {
+  margin-top: 1rem;
+  display: inline-block;
+  flex: none;
+}
+
+/* ===== NOVEL DETAIL PAGE ===== */
+.novel-detail-page {
+  padding: 2rem 0 4rem;
+}
+
+.novel-header {
+  padding: 2rem 0;
+}
+
+.novel-header-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.cover-placeholder-large {
+  width: 180px;
+  height: 250px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  flex-shrink: 0;
+}
+
+.novel-info-large {
+  flex: 1;
+}
+
+.novel-title-large {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.novel-author-large {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
 }
 
 .genre-tag-large {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
+  display: inline-block;
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--accent-light);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  margin-right: 8px;
 }
 
 .status-badge-large {
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-transform: uppercase;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .novel-description-large {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 1rem 0;
 }
 
 .novel-stats-large {
-    display: flex;
-    gap: 2rem;
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
 }
 
 .stat {
-    text-align: center;
+  text-align: center;
 }
 
 .stat-number {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-light);
 }
 
 .stat-label {
-    display: block;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-top: 0.25rem;
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Chapters Section */
+/* ===== CHAPTERS SECTION ===== */
 .chapters-section {
-    max-width: var(--max-width);
-    margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.chapters-container {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .chapters-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
 .chapters-header h2 {
-    font-size: 1.8rem;
-    color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .chapters-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .chapter-item {
-    background-color: var(--surface-color);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  transition: all var(--transition);
 }
 
 .chapter-item:hover {
-    transform: translateY(-1px);
+  background: var(--bg-card-hover);
+  border-color: rgba(139, 92, 246, 0.2);
+  transform: translateX(4px);
+}
+
+.chapter-title {
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .chapter-title a {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
+  color: var(--text-primary);
 }
 
 .chapter-title a:hover {
-    color: var(--primary-color);
+  color: var(--accent-light);
 }
 
 .chapter-date {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 
-/* Chapter Reading Page */
+.chapter-actions .btn-secondary.btn-small {
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  min-width: auto;
+  flex: none;
+}
+
+.no-chapters {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+}
+
+/* ===== NAVIGATION SECTION ===== */
+.navigation-section {
+  padding: 2rem 0;
+}
+
+.navigation-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.btn-outline {
+  display: inline-block;
+  padding: 11px 20px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--accent-light);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.btn-outline:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+
+/* ===== CHAPTER READING PAGE ===== */
 .chapter-reading-page {
-    max-width: 800px;
-    margin: 0 auto;
+  padding: 1rem 0 4rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .chapter-header {
-    margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .breadcrumb {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
 }
 
 .breadcrumb a {
-    color: var(--primary-color);
-    text-decoration: none;
+  color: var(--accent-light);
 }
 
 .chapter-title-main {
-    font-size: 2rem;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
 }
 
 .chapter-subtitle {
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-    font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .chapter-navigation {
-    background-color: var(--surface-color);
-    border-radius: var(--border-radius);
-    padding: 1rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow);
+  margin-bottom: 2rem;
 }
 
 .chapter-navigation .nav-container {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 1rem;
-    align-items: center;
-}
-
-.nav-left {
-    justify-self: start;
-}
-
-.nav-center {
-    justify-self: center;
-}
-
-.nav-right {
-    justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
 }
 
 .btn-nav {
-    padding: 0.75rem 1.5rem;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: var(--border-radius);
-    text-decoration: none;
-    font-weight: 500;
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--accent-light);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  text-decoration: none;
+  transition: all var(--transition);
 }
 
 .btn-nav:hover {
-    background-color: var(--primary-hover);
+  background: rgba(139, 92, 246, 0.1);
+  border-color: var(--accent);
+  color: var(--accent-light);
 }
 
 .chapter-selector label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-right: 8px;
 }
 
 .chapter-selector select {
-    padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--background-color);
-    color: var(--text-primary);
-    font-size: 0.9rem;
+  padding: 8px 12px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 
 .chapter-content-section {
-    background-color: var(--surface-color);
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.chapter-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
 }
 
 .reading-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-glass);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.font-controls, .theme-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.font-controls,
+.theme-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.font-controls button, .theme-controls button {
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--border-color);
-    background-color: var(--background-color);
-    color: var(--text-primary);
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 0.8rem;
+.font-controls label,
+.theme-controls label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.font-controls button,
+.theme-controls button {
+  padding: 6px 12px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+}
+
+.font-controls button:hover,
+.theme-controls button:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+}
+
+#font-size-display {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  min-width: 40px;
+  text-align: center;
 }
 
 .chapter-text {
-    line-height: 1.8;
-    font-size: 16px;
-    color: var(--text-primary);
-}
-
-.chapter-text h2 {
-    margin-bottom: 1rem;
-    color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--text-primary);
 }
 
 .chapter-text p {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.chapter-text h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-light);
 }
 
 .chapter-text blockquote {
-    border-left: 4px solid var(--primary-color);
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-    font-style: italic;
-    color: var(--text-secondary);
+  border-left: 3px solid var(--accent);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 .bottom-nav {
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
+  margin-top: 2rem;
 }
 
 .chapter-progress {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .end-message {
-    color: var(--text-secondary);
-    font-style: italic;
+  color: var(--accent-light);
+  font-weight: 600;
 }
 
-/* Navigation Section */
-.navigation-section {
-    max-width: var(--max-width);
-    margin: 2rem auto 0;
-}
-
-/* Error Page */
+/* ===== ERROR PAGE ===== */
 .error-page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
 }
 
 .error-container {
-    text-align: center;
-    max-width: 500px;
+  max-width: 500px;
+  padding: 3rem;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
 }
 
 .error-code {
-    font-size: 4rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
+  font-size: 5rem;
+  font-weight: 800;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.5rem;
 }
 
 .error-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
 }
 
 .error-message {
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
 }
 
 .error-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
 }
 
-/* Footer */
+.error-actions .btn-primary,
+.error-actions .btn-secondary {
+  flex: none;
+  min-width: auto;
+}
+
+/* ===== FOOTER ===== */
 .footer {
-    background-color: var(--surface-color);
-    border-top: 1px solid var(--border-color);
-    padding: 2rem 1rem;
-    text-align: center;
-    color: var(--text-secondary);
+  border-top: 1px solid var(--border-glass);
+  background: rgba(15, 13, 27, 0.5);
+  padding: 2rem 0;
+  margin-top: auto;
 }
 
 .footer-container {
-    max-width: var(--max-width);
-    margin: 0 auto;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
 }
 
-/* Responsive Design */
+.footer-sub {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* ===== DARK THEME TOGGLE (for chapter reader) ===== */
+body.dark-theme {
+  /* already dark by default */
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .search-box {
-        flex-direction: column;
-    }
-    
-    .novels-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .novel-header-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    
-    .cover-placeholder-large {
-        width: 150px;
-        height: 210px;
-        margin: 0 auto;
-    }
-    
-    .novel-title-large {
-        font-size: 2rem;
-    }
-    
-    .novel-stats-large {
-        justify-content: center;
-    }
-    
-    .chapters-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-    }
-    
-    .chapter-item {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-    }
-    
-    .chapter-navigation .nav-container {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    
-    .chapter-title-main {
-        font-size: 1.5rem;
-    }
-    
-    .reading-controls {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .error-actions {
-        flex-direction: column;
-    }
-    
-    .genres-grid {
-        grid-template-columns: 1fr;
-    }
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .novels-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .search-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .search-btn,
+  .show-all-btn {
+    width: 100%;
+  }
+
+  .novel-header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .novel-stats-large {
+    justify-content: center;
+  }
+
+  .chapter-navigation .nav-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .novel-actions {
+    flex-direction: column;
+  }
+
+  .reading-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chapter-reading-page {
+    padding: 1rem 16px 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-menu {
+    gap: 16px;
+  }
+
+  .nav-logo {
+    font-size: 1.1rem;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .novel-card {
+    padding: 1.25rem;
+  }
+
+  .error-code {
+    font-size: 3.5rem;
+  }
 }
