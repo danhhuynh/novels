@@ -30,3 +30,6 @@ coverage/
 
 # AWS credentials (local development)
 .aws/
+
+database/novels.db
+package-lock.json
