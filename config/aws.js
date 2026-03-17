@@ -27,13 +27,23 @@ function getCoverImageUrl(coverImage) {
 }
 
 /**
+ * Get chapter folder for S3 (e.g. 1-100 => 100, 101-200 => 200)
+ * @param {number} chapterNumber
+ * @returns {number} Folder name
+ */
+function getChapterFolder(chapterNumber) {
+  return Math.ceil(chapterNumber / 100) * 100;
+}
+
+/**
  * Get chapter content URL
  * @param {string} novelId - Novel ID
  * @param {number} chapterNumber - Chapter number
  * @returns {string} Full URL to chapter content
  */
 function getChapterContentUrl(novelId, chapterNumber) {
-  return `${config.bucketUrl}/novels/${novelId}/chuong-${chapterNumber}`;
+  const folder = getChapterFolder(chapterNumber);
+  return `${config.bucketUrl}/novels/${novelId}/${folder}/chuong-${chapterNumber}.txt`;
 }
 
 /**
@@ -44,7 +54,8 @@ function getChapterContentUrl(novelId, chapterNumber) {
  */
 async function getChapterContent(novelId, chapterNumber) {
   try {
-    const key = `novels/${novelId}/chuong-${chapterNumber}`;
+    const folder = getChapterFolder(chapterNumber);
+    const key = `novels/${novelId}/${folder}/chuong-${chapterNumber}.txt`;
     const params = {
       Bucket: config.bucketName,
       Key: key
@@ -53,10 +64,10 @@ async function getChapterContent(novelId, chapterNumber) {
     console.log(`[S3] Fetching chapter content:`, params);
 
     const data = await s3.getObject(params).promise();
-    console.log(`[S3] Successfully fetched chapter content for ${novelId}/chuong-${chapterNumber}`);
+    console.log(`[S3] Successfully fetched chapter content for ${novelId}/${folder}/chuong-${chapterNumber}.txt`);
     return data.Body.toString('utf-8');
   } catch (error) {
-    console.error(`[S3] Error fetching chapter content for ${novelId}/chuong-${chapterNumber}:`, error);
+    console.error(`[S3] Error fetching chapter content for ${novelId}/chuong-${chapterNumber}.txt:`, error);
     throw error;
   }
 }
@@ -69,7 +80,8 @@ async function getChapterContent(novelId, chapterNumber) {
  */
 async function chapterExists(novelId, chapterNumber) {
   try {
-    const key = `novels/${novelId}/chuong-${chapterNumber}`;
+    const folder = getChapterFolder(chapterNumber);
+    const key = `novels/${novelId}/${folder}/chuong-${chapterNumber}.txt`;
     const params = {
       Bucket: config.bucketName,
       Key: key
@@ -78,10 +90,10 @@ async function chapterExists(novelId, chapterNumber) {
     console.log(`[S3] Checking if chapter exists:`, params);
 
     await s3.headObject(params).promise();
-    console.log(`[S3] Chapter exists: ${novelId}/chuong-${chapterNumber}`);
+    console.log(`[S3] Chapter exists: ${novelId}/${folder}/chuong-${chapterNumber}.txt`);
     return true;
   } catch (error) {
-    console.warn(`[S3] Chapter does NOT exist: ${novelId}/chuong-${chapterNumber}`);
+    console.warn(`[S3] Chapter does NOT exist: ${novelId}/chuong-${chapterNumber}.txt`);
     return false;
   }
 }
