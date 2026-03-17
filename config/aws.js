@@ -50,10 +50,13 @@ async function getChapterContent(novelId, chapterNumber) {
       Key: key
     };
 
+    console.log(`[S3] Fetching chapter content:`, params);
+
     const data = await s3.getObject(params).promise();
+    console.log(`[S3] Successfully fetched chapter content for ${novelId}/chuong-${chapterNumber}`);
     return data.Body.toString('utf-8');
   } catch (error) {
-    console.error(`Error fetching chapter content for ${novelId}/chuong-${chapterNumber}:`, error);
+    console.error(`[S3] Error fetching chapter content for ${novelId}/chuong-${chapterNumber}:`, error);
     throw error;
   }
 }
@@ -72,9 +75,13 @@ async function chapterExists(novelId, chapterNumber) {
       Key: key
     };
 
+    console.log(`[S3] Checking if chapter exists:`, params);
+
     await s3.headObject(params).promise();
+    console.log(`[S3] Chapter exists: ${novelId}/chuong-${chapterNumber}`);
     return true;
   } catch (error) {
+    console.warn(`[S3] Chapter does NOT exist: ${novelId}/chuong-${chapterNumber}`);
     return false;
   }
 }
