@@ -101,8 +101,15 @@ a:hover {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 .logo-text {
@@ -405,7 +412,9 @@ a:hover {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .empty-state {
@@ -639,18 +648,26 @@ a:hover {
   color: var(--accent-light);
 }
 
-/* ===== CHAPTER READING PAGE ===== */
+/* ===== CHAPTER READING PAGE VIP RE-DESIGN ===== */
 .chapter-reading-page {
-  padding: 1rem 0 4rem;
+  padding: 1rem 0 6rem;
+  /* Extra bottom padding for sticky nav */
   max-width: 800px;
   margin: 0 auto;
 }
 
+/* Header area */
 .chapter-header {
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   color: var(--text-muted);
   font-size: 0.85rem;
   margin-bottom: 1rem;
@@ -660,11 +677,16 @@ a:hover {
   color: var(--accent-light);
 }
 
+.breadcrumb-sep {
+  opacity: 0.5;
+}
+
 .chapter-title-main {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
+  line-height: 1.3;
 }
 
 .chapter-subtitle {
@@ -673,115 +695,144 @@ a:hover {
   color: var(--text-secondary);
 }
 
-.chapter-navigation {
-  margin-bottom: 2rem;
-}
-
-.chapter-navigation .nav-container {
+/* Compact Nav Row */
+.chapter-nav-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding: 1rem;
+  gap: 0.5rem;
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .btn-nav {
-  display: inline-block;
-  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.9rem;
   color: var(--accent-light);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  text-decoration: none;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   transition: all var(--transition);
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .btn-nav:hover {
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(139, 92, 246, 0.2);
   border-color: var(--accent);
-  color: var(--accent-light);
 }
 
-.chapter-selector label {
+.btn-nav-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: transparent;
   color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-right: 8px;
+  border-color: transparent;
+}
+
+.chapter-selector {
+  flex: 1;
+  min-width: 0;
 }
 
 .chapter-selector select {
-  padding: 8px 12px;
+  width: 100%;
+  padding: 0.75rem;
   background: var(--bg-glass);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
+  text-align: center;
+  text-overflow: ellipsis;
+  outline: none;
 }
 
-.chapter-content-section {
-  margin-bottom: 2rem;
-}
-
-.chapter-content {
+/* Reading Toolbar */
+.reading-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0;
+  border-bottom: none;
 }
 
-.reading-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-glass);
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.font-controls,
-.theme-controls {
+.toolbar-group {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.font-controls label,
-.theme-controls label {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.font-controls button,
-.theme-controls button {
-  padding: 6px 12px;
   background: var(--bg-glass);
+  border-radius: 20px;
+  overflow: hidden;
   border: 1px solid var(--border-glass);
-  border-radius: var(--radius-sm);
+}
+
+.toolbar-btn {
+  background: transparent;
+  border: none;
   color: var(--text-primary);
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: all var(--transition);
+  font-weight: 600;
+  transition: background var(--transition);
 }
 
-.font-controls button:hover,
-.theme-controls button:hover {
+.toolbar-btn:hover {
   background: var(--bg-card-hover);
-  border-color: var(--accent);
 }
 
-#font-size-display {
+.toolbar-value {
+  padding: 0 0.5rem;
   color: var(--text-secondary);
   font-size: 0.85rem;
-  min-width: 40px;
+  min-width: 44px;
   text-align: center;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-glass);
+}
+
+.toolbar-progress {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+#theme-toggle {
+  font-size: 1.1rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+}
+
+/* Chapter Content */
+.chapter-content-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: 1.5rem 2rem 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .chapter-text {
@@ -791,13 +842,8 @@ a:hover {
 }
 
 .chapter-text p {
-  margin-bottom: 1.2rem;
-}
-
-.chapter-text h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--accent-light);
+  margin-bottom: 1.25rem;
+  text-indent: 1rem;
 }
 
 .chapter-text blockquote {
@@ -806,21 +852,102 @@ a:hover {
   margin: 1.5rem 0;
   color: var(--text-secondary);
   font-style: italic;
+  text-indent: 0;
 }
 
-.bottom-nav {
-  margin-top: 2rem;
+/* Bottom Actions */
+.chapter-bottom-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1rem;
 }
 
-.chapter-progress {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.end-message {
-  color: var(--accent-light);
+.bottom-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
   font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all var(--transition);
+  text-align: center;
 }
+
+.continue-btn {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.continue-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  color: white;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.end-btn {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  border: 1px dashed var(--border-glass);
+  cursor: default;
+}
+
+/* Sticky Mobile Nav */
+.chapter-sticky-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 13, 27, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-glass);
+  display: none;
+  /* Mobile only */
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sticky-nav-hidden {
+  transform: translateY(100%);
+}
+
+.sticky-nav-btn {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem;
+}
+
+.sticky-nav-center {
+  color: var(--accent-light);
+  font-size: 0.85rem;
+}
+
+.sticky-nav-disabled {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
 
 /* ===== ERROR PAGE ===== */
 .error-page {
@@ -897,10 +1024,6 @@ a:hover {
   opacity: 0.6;
 }
 
-/* ===== DARK THEME TOGGLE (for chapter reader) ===== */
-body.dark-theme {
-  /* already dark by default */
-}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
@@ -942,22 +1065,77 @@ body.dark-theme {
     justify-content: center;
   }
 
-  .chapter-navigation .nav-container {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .novel-actions {
-    flex-direction: column;
-  }
-
-  .reading-controls {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
+  /* Chapter Read Page Mobile Fixes */
   .chapter-reading-page {
-    padding: 1rem 16px 4rem;
+    padding: 0;
+  }
+
+  .chapter-header {
+    margin-top: 1rem;
+    padding: 0 1rem;
+  }
+
+  .chapter-title-main {
+    font-size: 1.25rem;
+  }
+
+  .chapter-subtitle {
+    font-size: 1rem;
+  }
+
+  .chapter-navigation {
+    padding: 0 0.5rem;
+  }
+
+  .btn-nav {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .btn-nav .nav-label {
+    display: none;
+    /* Hide text, show only arrows on mobile */
+  }
+
+  .chapter-selector select {
+    font-size: 0.9rem;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .reading-toolbar {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .toolbar-value {
+    min-width: 36px;
+  }
+
+  .chapter-content-section {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .chapter-text {
+    font-size: 1.05rem !important;
+  }
+
+  .chapter-text p {
+    text-indent: 0;
+    /* Remove indent on mobile for cleaner look */
+  }
+
+  /* Show sticky nav on mobile */
+  .chapter-sticky-nav {
+    display: flex;
+  }
+
+  /* Hide normal bottom actions */
+  .chapter-bottom-actions {
+    margin-bottom: 2rem;
   }
 }
 

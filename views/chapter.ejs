@@ -1,239 +1,201 @@
 <%- include('partials/header') %>
 
-<div class="chapter-reading-page">
-    <div class="chapter-header">
-        <div class="chapter-nav-top">
+    <div class="chapter-reading-page">
+        <!-- Compact header with breadcrumb -->
+        <div class="chapter-header">
             <div class="breadcrumb">
-                <a href="/">Home</a> → 
-                <a href="/novels/<%= novel.id %>"><%= novel.title %></a> → 
-                Chapter <%= chapterNumber %>
-            </div>
-            <div class="chapter-info-header">
-                <h1 class="chapter-title-main">
+                <a href="/">Home</a>
+                <span class="breadcrumb-sep">›</span>
+                <a href="/novels/<%= novel.id %>">
                     <%= novel.title %>
-                </h1>
-                <h2 class="chapter-subtitle">
-                    Chapter <%= chapterNumber %>: <%= chapter.title %>
-                </h2>
+                </a>
+                <span class="breadcrumb-sep">›</span>
+                <span>Ch. <%= chapterNumber %></span>
             </div>
+            <h1 class="chapter-title-main">
+                <%= novel.title %>
+            </h1>
+            <h2 class="chapter-subtitle">Chapter <%= chapterNumber %>: <%= chapter.title %>
+            </h2>
         </div>
-    </div>
 
-    <div class="chapter-navigation">
-        <div class="nav-container">
-            <div class="nav-left">
+        <!-- Compact top navigation -->
+        <div class="chapter-navigation">
+            <div class="chapter-nav-row">
                 <% if (navigation.hasPrevious) { %>
-                    <a href="/chapters/<%= novel.id %>/<%= navigation.previousChapter %>" 
-                       class="btn btn-nav" id="prev-btn">
-                        ← Previous
+                    <a href="/chapters/<%= novel.id %>/<%= navigation.previousChapter %>" class="btn-nav" id="prev-btn"
+                        aria-label="Previous chapter">
+                        <span class="nav-icon">‹</span>
+                        <span class="nav-label">Prev</span>
                     </a>
-                <% } %>
-            </div>
+                    <% } else { %>
+                        <span class="btn-nav btn-nav-disabled" aria-hidden="true">
+                            <span class="nav-icon">‹</span>
+                            <span class="nav-label">Prev</span>
+                        </span>
+                        <% } %>
 
-            <div class="nav-center">
-                <div class="chapter-selector">
-                    <label for="chapter-select">Jump to Chapter:</label>
-                    <select id="chapter-select" onchange="jumpToChapter(this.value)">
-                        <% navigation.allChapters.forEach(ch => { %>
-                            <option value="<%= ch.number %>" <%= ch.number === chapterNumber ? 'selected' : '' %>>
-                                Chapter <%= ch.number %>: <%= ch.title %>
-                            </option>
-                        <% }) %>
-                    </select>
-                </div>
-            </div>
+                            <div class="chapter-selector">
+                                <select id="chapter-select" onchange="jumpToChapter(this.value)"
+                                    aria-label="Jump to chapter">
+                                    <% navigation.allChapters.forEach(ch=> { %>
+                                        <option value="<%= ch.number %>" <%=ch.number===chapterNumber ? 'selected' : ''
+                                            %>>
+                                            Ch. <%= ch.number %>: <%= ch.title %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
 
-            <div class="nav-right">
-                <% if (navigation.hasNext) { %>
-                    <a href="/chapters/<%= novel.id %>/<%= navigation.nextChapter %>" 
-                       class="btn btn-nav" id="next-btn">
-                        Next →
-                    </a>
-                <% } %>
+                            <% if (navigation.hasNext) { %>
+                                <a href="/chapters/<%= novel.id %>/<%= navigation.nextChapter %>" class="btn-nav"
+                                    id="next-btn" aria-label="Next chapter">
+                                    <span class="nav-label">Next</span>
+                                    <span class="nav-icon">›</span>
+                                </a>
+                                <% } else { %>
+                                    <span class="btn-nav btn-nav-disabled" aria-hidden="true">
+                                        <span class="nav-label">Next</span>
+                                        <span class="nav-icon">›</span>
+                                    </span>
+                                    <% } %>
             </div>
         </div>
-    </div>
 
-    <div class="chapter-content-section">
-        <div class="chapter-content">
-            <div class="reading-controls">
-                <div class="font-controls">
-                    <label>Font Size:</label>
-                    <button onclick="changeFontSize(-1)">A-</button>
-                    <span id="font-size-display">16px</span>
-                    <button onclick="changeFontSize(1)">A+</button>
-                </div>
-                <div class="theme-controls">
-                    <label>Theme:</label>
-                    <button onclick="toggleTheme()" id="theme-toggle">🌙</button>
-                </div>
+        <!-- Reading controls toolbar -->
+        <div class="reading-toolbar">
+            <div class="toolbar-group">
+                <button class="toolbar-btn" onclick="changeFontSize(-1)" aria-label="Decrease font size">A−</button>
+                <span class="toolbar-value" id="font-size-display">16px</span>
+                <button class="toolbar-btn" onclick="changeFontSize(1)" aria-label="Increase font size">A+</button>
             </div>
-            
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+            <div class="toolbar-divider"></div>
+            <span class="toolbar-progress">
+                <%= chapterNumber %> / <%= navigation.totalChapters %>
+            </span>
+        </div>
+
+        <!-- Chapter content -->
+        <div class="chapter-content-section">
             <article class="chapter-text" id="chapter-text">
                 <%- chapterContent %>
             </article>
         </div>
-    </div>
 
-    <div class="chapter-navigation bottom-nav">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a href="/novels/<%= novel.id %>" class="btn btn-outline">
-                    ← Back to Chapters
+        <!-- Bottom navigation -->
+        <div class="chapter-bottom-actions">
+            <a href="/novels/<%= novel.id %>" class="bottom-action-btn back-btn">
+                <span class="action-icon">←</span>
+                <span>Chapter List</span>
+            </a>
+            <% if (navigation.hasNext) { %>
+                <a href="/chapters/<%= novel.id %>/<%= navigation.nextChapter %>"
+                    class="bottom-action-btn continue-btn">
+                    <span>Continue Reading</span>
+                    <span class="action-icon">→</span>
                 </a>
-            </div>
-
-            <div class="nav-center">
-                <span class="chapter-progress">
-                    Chapter <%= chapterNumber %> of <%= navigation.totalChapters %>
-                </span>
-            </div>
-
-            <div class="nav-right">
-                <% if (navigation.hasNext) { %>
-                    <a href="/chapters/<%= novel.id %>/<%= navigation.nextChapter %>" 
-                       class="btn btn-primary">
-                        Continue Reading →
-                    </a>
                 <% } else { %>
-                    <span class="end-message">You've reached the end!</span>
-                <% } %>
-            </div>
+                    <div class="bottom-action-btn end-btn">
+                        <span>✨ End of Novel</span>
+                    </div>
+                    <% } %>
         </div>
     </div>
-</div>
 
-<script>
-function jumpToChapter(chapterNumber) {
-    if (chapterNumber && chapterNumber !== '<%= chapterNumber %>') {
-        window.location.href = `/chapters/<%= novel.id %>/${chapterNumber}`;
-    }
-}
+    <!-- Sticky mobile bottom nav -->
+    <div class="chapter-sticky-nav">
+        <% if (navigation.hasPrevious) { %>
+            <a href="/chapters/<%= novel.id %>/<%= navigation.previousChapter %>" class="sticky-nav-btn"
+                aria-label="Previous chapter">
+                ‹ Prev
+            </a>
+            <% } else { %>
+                <span class="sticky-nav-btn sticky-nav-disabled">‹ Prev</span>
+                <% } %>
+                    <a href="/novels/<%= novel.id %>" class="sticky-nav-btn sticky-nav-center"
+                        aria-label="Chapter list">
+                        ☰ Ch. <%= chapterNumber %>/<%= navigation.totalChapters %>
+                    </a>
+                    <% if (navigation.hasNext) { %>
+                        <a href="/chapters/<%= novel.id %>/<%= navigation.nextChapter %>" class="sticky-nav-btn"
+                            aria-label="Next chapter">
+                            Next ›
+                        </a>
+                        <% } else { %>
+                            <span class="sticky-nav-btn sticky-nav-disabled">Next ›</span>
+                            <% } %>
+    </div>
 
-// Reading preferences
-let fontSize = 16;
-let isDarkTheme = false;
+    <script>
+        function jumpToChapter(chapterNumber) {
+            if (chapterNumber && chapterNumber !== '<%= chapterNumber %>') {
+                window.location.href = `/chapters/<%= novel.id %>/${chapterNumber}`;
+            }
+        }
 
-function changeFontSize(delta) {
-    fontSize = Math.max(12, Math.min(24, fontSize + delta));
-    document.getElementById('chapter-text').style.fontSize = fontSize + 'px';
-    document.getElementById('font-size-display').textContent = fontSize + 'px';
-    localStorage.setItem('fontSize', fontSize);
-}
+        // Reading preferences
+        let fontSize = 16;
+        let isDarkTheme = false;
 
-function toggleTheme() {
-    isDarkTheme = !isDarkTheme;
-    document.body.classList.toggle('dark-theme', isDarkTheme);
-    document.getElementById('theme-toggle').textContent = isDarkTheme ? '☀️' : '🌙';
-    localStorage.setItem('isDarkTheme', isDarkTheme);
-}
+        function changeFontSize(delta) {
+            fontSize = Math.max(12, Math.min(24, fontSize + delta));
+            document.getElementById('chapter-text').style.fontSize = fontSize + 'px';
+            document.getElementById('font-size-display').textContent = fontSize + 'px';
+            localStorage.setItem('fontSize', fontSize);
+        }
 
-// Load saved preferences
-window.addEventListener('load', function() {
-    const savedFontSize = localStorage.getItem('fontSize');
-    const savedTheme = localStorage.getItem('isDarkTheme');
-    
-    if (savedFontSize) {
-        fontSize = parseInt(savedFontSize);
-        document.getElementById('chapter-text').style.fontSize = fontSize + 'px';
-        document.getElementById('font-size-display').textContent = fontSize + 'px';
-    }
-    
-    if (savedTheme === 'true') {
-        isDarkTheme = true;
-        document.body.classList.add('dark-theme');
-        document.getElementById('theme-toggle').textContent = '☀️';
-    }
-});
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            document.body.classList.toggle('dark-theme', isDarkTheme);
+            document.getElementById('theme-toggle').textContent = isDarkTheme ? '☀️' : '🌙';
+            localStorage.setItem('isDarkTheme', isDarkTheme);
+        }
 
-// Keyboard navigation
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey || event.metaKey) return; // Ignore shortcuts
-    
-    if (event.key === 'ArrowLeft' || event.key === 'h') {
-        const prevBtn = document.getElementById('prev-btn');
-        if (prevBtn) prevBtn.click();
-    } else if (event.key === 'ArrowRight' || event.key === 'l') {
-        const nextBtn = document.getElementById('next-btn');
-        if (nextBtn) nextBtn.click();
-    }
-});
-</script>
+        // Load saved preferences
+        window.addEventListener('load', function () {
+            const savedFontSize = localStorage.getItem('fontSize');
+            const savedTheme = localStorage.getItem('isDarkTheme');
 
-<style>
-/* filepath: /Users/danh.huynh/Desktop/novels/views/chapter.ejs (inline mobile styles) */
-/* Responsive tweaks for chapter detail page */
-@media (max-width: 768px) {
-    .chapter-reading-page {
-        padding: 0.5rem 0 2rem;
-        max-width: 100vw;
-    }
-    .chapter-header {
-        margin-bottom: 1rem;
-        padding: 0 8px;
-    }
-    .chapter-title-main {
-        font-size: 1.1rem;
-    }
-    .chapter-subtitle {
-        font-size: 1rem;
-    }
-    .chapter-content-section {
-        margin-bottom: 1rem;
-        padding: 0 2px;
-    }
-    .chapter-content {
-        padding: 1rem 0.5rem;
-        border-radius: 12px;
-    }
-    .reading-controls {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.5rem;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
-    }
-    .chapter-navigation .nav-container,
-    .chapter-navigation.bottom-nav .nav-container {
-        flex-direction: column;
-        gap: 0.5rem;
-        padding: 0.5rem;
-    }
-    .btn, .btn-nav, .btn-primary, .btn-outline {
-        width: 100%;
-        min-width: unset;
-        font-size: 1rem;
-        padding: 12px 0;
-        margin-bottom: 4px;
-    }
-    .chapter-selector label {
-        font-size: 0.95rem;
-    }
-    .chapter-selector select {
-        width: 100%;
-        font-size: 1rem;
-        margin-top: 4px;
-    }
-    .chapter-progress {
-        font-size: 1rem;
-    }
-    .end-message {
-        font-size: 1rem;
-    }
-    .chapter-text {
-        font-size: 1.05rem !important;
-        word-break: break-word;
-    }
-}
-@media (max-width: 480px) {
-    .chapter-header, .chapter-content-section {
-        padding-left: 0;
-        padding-right: 0;
-    }
-    .chapter-content {
-        padding: 0.5rem 0.2rem;
-    }
-}
-</style>
+            if (savedFontSize) {
+                fontSize = parseInt(savedFontSize);
+                document.getElementById('chapter-text').style.fontSize = fontSize + 'px';
+                document.getElementById('font-size-display').textContent = fontSize + 'px';
+            }
 
-<%- include('partials/footer') %>
+            if (savedTheme === 'true') {
+                isDarkTheme = true;
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-toggle').textContent = '☀️';
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (event) {
+            if (event.ctrlKey || event.metaKey) return;
+
+            if (event.key === 'ArrowLeft' || event.key === 'h') {
+                const prevBtn = document.getElementById('prev-btn');
+                if (prevBtn) prevBtn.click();
+            } else if (event.key === 'ArrowRight' || event.key === 'l') {
+                const nextBtn = document.getElementById('next-btn');
+                if (nextBtn) nextBtn.click();
+            }
+        });
+
+        // Hide/show sticky nav on scroll for immersive reading
+        let lastScrollY = window.scrollY;
+        const stickyNav = document.querySelector('.chapter-sticky-nav');
+        window.addEventListener('scroll', function () {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                stickyNav.classList.add('sticky-nav-hidden');
+            } else {
+                stickyNav.classList.remove('sticky-nav-hidden');
+            }
+            lastScrollY = currentScrollY;
+        }, { passive: true });
+    </script>
+
+    <%- include('partials/footer') %>
