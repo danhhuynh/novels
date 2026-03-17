@@ -160,4 +160,80 @@ document.addEventListener('keydown', function(event) {
 });
 </script>
 
+<style>
+/* filepath: /Users/danh.huynh/Desktop/novels/views/chapter.ejs (inline mobile styles) */
+/* Responsive tweaks for chapter detail page */
+@media (max-width: 768px) {
+    .chapter-reading-page {
+        padding: 0.5rem 0 2rem;
+        max-width: 100vw;
+    }
+    .chapter-header {
+        margin-bottom: 1rem;
+        padding: 0 8px;
+    }
+    .chapter-title-main {
+        font-size: 1.1rem;
+    }
+    .chapter-subtitle {
+        font-size: 1rem;
+    }
+    .chapter-content-section {
+        margin-bottom: 1rem;
+        padding: 0 2px;
+    }
+    .chapter-content {
+        padding: 1rem 0.5rem;
+        border-radius: 12px;
+    }
+    .reading-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    .chapter-navigation .nav-container,
+    .chapter-navigation.bottom-nav .nav-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+    .btn, .btn-nav, .btn-primary, .btn-outline {
+        width: 100%;
+        min-width: unset;
+        font-size: 1rem;
+        padding: 12px 0;
+        margin-bottom: 4px;
+    }
+    .chapter-selector label {
+        font-size: 0.95rem;
+    }
+    .chapter-selector select {
+        width: 100%;
+        font-size: 1rem;
+        margin-top: 4px;
+    }
+    .chapter-progress {
+        font-size: 1rem;
+    }
+    .end-message {
+        font-size: 1rem;
+    }
+    .chapter-text {
+        font-size: 1.05rem !important;
+        word-break: break-word;
+    }
+}
+@media (max-width: 480px) {
+    .chapter-header, .chapter-content-section {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .chapter-content {
+        padding: 0.5rem 0.2rem;
+    }
+}
+</style>
+
 <%- include('partials/footer') %>
