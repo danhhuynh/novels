@@ -79,7 +79,7 @@
 
         <!-- Chapter content -->
         <div class="chapter-content-section">
-            <article class="chapter-text" id="chapter-text">
+            <article class="chapter-text unselectable" id="chapter-text">
                 <%- chapterContent %>
             </article>
         </div>
@@ -128,6 +128,19 @@
                             <% } %>
     </div>
 
+    <style>
+        .unselectable {
+            -webkit-user-select: none;
+            /* Safari */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* IE10+/Edge */
+            user-select: none;
+            /* Standard */
+        }
+    </style>
+
     <script>
         function jumpToChapter(chapterNumber) {
             if (chapterNumber && chapterNumber !== '<%= chapterNumber %>') {
@@ -171,16 +184,53 @@
             }
         });
 
-        // Keyboard navigation
+        // Keyboard navigation and Anti-theft protection
         document.addEventListener('keydown', function (event) {
-            if (event.ctrlKey || event.metaKey) return;
+            // Nav shortcuts
+            if (!event.ctrlKey && !event.metaKey) {
+                if (event.key === 'ArrowLeft' || event.key === 'h') {
+                    const prevBtn = document.getElementById('prev-btn');
+                    if (prevBtn) prevBtn.click();
+                } else if (event.key === 'ArrowRight' || event.key === 'l') {
+                    const nextBtn = document.getElementById('next-btn');
+                    if (nextBtn) nextBtn.click();
+                }
+            }
 
-            if (event.key === 'ArrowLeft' || event.key === 'h') {
-                const prevBtn = document.getElementById('prev-btn');
-                if (prevBtn) prevBtn.click();
-            } else if (event.key === 'ArrowRight' || event.key === 'l') {
-                const nextBtn = document.getElementById('next-btn');
-                if (nextBtn) nextBtn.click();
+            // --- Anti-theft ---
+            // Prevent F12
+            if (event.key === 'F12') {
+                event.preventDefault();
+                return false;
+            }
+
+            if (event.ctrlKey || event.metaKey) {
+                const key = event.key.toLowerCase();
+                // Prevent Ctrl+Shift+I, J, C (DevTools/Console/Inspect)
+                if (event.shiftKey && (key === 'i' || key === 'j' || key === 'c')) {
+                    event.preventDefault();
+                    return false;
+                }
+                // Prevent Ctrl+U (View Source)
+                if (key === 'u') {
+                    event.preventDefault();
+                    return false;
+                }
+                // Prevent Ctrl+S (Save)
+                if (key === 's') {
+                    event.preventDefault();
+                    return false;
+                }
+                // Prevent Ctrl+P (Print)
+                if (key === 'p') {
+                    event.preventDefault();
+                    return false;
+                }
+                // Prevent Ctrl+C / Ctrl+X (Copy/Cut) on the whole document for extra safety
+                if (key === 'c' || key === 'x') {
+                    event.preventDefault();
+                    return false;
+                }
             }
         });
 
@@ -196,6 +246,27 @@
             }
             lastScrollY = currentScrollY;
         }, { passive: true });
+
+        // --- Additional anti-theft bindings ---
+        const chapterText = document.getElementById('chapter-text');
+        if (chapterText) {
+            // Disable right click
+            chapterText.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Disable copy/cut
+            chapterText.addEventListener('copy', e => e.preventDefault());
+            chapterText.addEventListener('cut', e => e.preventDefault());
+
+            // Disable dragging elements (like images or text chunks)
+            chapterText.addEventListener('dragstart', e => e.preventDefault());
+        }
+
+        // Global context menu disable for the whole body just in case
+        document.addEventListener('contextmenu', e => {
+            if (e.target.closest('#chapter-text') || e.target.nodeName === 'IMG') {
+                e.preventDefault();
+            }
+        });
     </script>
 
     <%- include('partials/footer') %>
