@@ -469,6 +469,15 @@ a:hover {
   flex-shrink: 0;
 }
 
+.cover-image-large {
+  width: 180px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
 .novel-info-large {
   flex: 1;
 }

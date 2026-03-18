@@ -27,12 +27,12 @@ function getCoverImageUrl(coverImage) {
 }
 
 /**
- * Get chapter folder for S3 (e.g. 1-100 => 100, 101-200 => 200)
+ * Get chapter folder for S3 (e.g. 0-99 => 0, 100-199 => 100, 300-399 => 300)
  * @param {number} chapterNumber
  * @returns {number} Folder name
  */
 function getChapterFolder(chapterNumber) {
-  return Math.ceil(chapterNumber / 100) * 100;
+  return Math.floor(chapterNumber / 100) * 100;
 }
 
 /**

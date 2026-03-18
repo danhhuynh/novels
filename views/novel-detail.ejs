@@ -1,85 +1,101 @@
 <%- include('partials/header') %>
 
-<div class="novel-detail-page">
-    <div class="novel-header">
-        <div class="novel-header-content">
-            <div class="novel-cover-large">
-                <div class="cover-placeholder-large">
-                    📖
-                </div>
-            </div>
-            <div class="novel-info-large">
-                <h1 class="novel-title-large"><%= novel.title %></h1>
-                <p class="novel-author-large">by <%= novel.author %></p>
-                <div class="novel-meta">
-                    <span class="genre-tag-large"><%= novel.genre %></span>
-                    <span class="status-badge-large status-<%= novel.status.toLowerCase() %>">
-                        <%= novel.status %>
-                    </span>
-                </div>
-                <p class="novel-description-large"><%= novel.description %></p>
-                <div class="novel-stats-large">
-                    <div class="stat">
-                        <span class="stat-number"><%= novel.totalChapters %></span>
-                        <span class="stat-label">Chapter<%= novel.totalChapters !== 1 ? 's' : '' %></span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number"><%= novel.lastUpdated %></span>
-                        <span class="stat-label">Last Updated</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="chapters-section">
-        <div class="chapters-container">
-            <div class="chapters-header">
-                <h2>Chapters</h2>
-                <% if (novel.chapters.length > 0) { %>
-                    <a href="/chapters/<%= novel.id %>/1" class="btn btn-primary">
-                        Start Reading
-                    </a>
-                <% } %>
-            </div>
-
-            <% if (novel.chapters.length === 0) { %>
-                <div class="no-chapters">
-                    <p>No chapters available yet. Check back later!</p>
-                </div>
-            <% } else { %>
-                <div class="chapters-list">
-                    <% novel.chapters.forEach(chapter => { %>
-                        <div class="chapter-item">
-                            <div class="chapter-info">
-                                <h3 class="chapter-title">
-                                    <a href="/chapters/<%= novel.id %>/<%= chapter.number %>">
-                                        Chapter <%= chapter.number %>: <%= chapter.title %>
-                                    </a>
-                                </h3>
-                                <p class="chapter-date">
-                                    Published: <%= chapter.publishDate %>
-                                </p>
+    <div class="novel-detail-page">
+        <div class="novel-header">
+            <div class="novel-header-content">
+                <div class="novel-cover-large">
+                    <% if (novel.coverImageUrl) { %>
+                        <img src="<%= novel.coverImageUrl %>" alt="<%= novel.title %> Cover" class="cover-image-large">
+                        <% } else { %>
+                            <div class="cover-placeholder-large">
+                                📖
                             </div>
-                            <div class="chapter-actions">
-                                <a href="/chapters/<%= novel.id %>/<%= chapter.number %>" class="btn btn-secondary btn-small">
-                                    Read Chapter
-                                </a>
-                            </div>
+                            <% } %>
+                </div>
+                <div class="novel-info-large">
+                    <h1 class="novel-title-large">
+                        <%= novel.title %>
+                    </h1>
+                    <p class="novel-author-large">by <%= novel.author %>
+                    </p>
+                    <div class="novel-meta">
+                        <span class="genre-tag-large">
+                            <%= novel.genre %>
+                        </span>
+                        <span class="status-badge-large status-<%= novel.status.toLowerCase() %>">
+                            <%= novel.status %>
+                        </span>
+                    </div>
+                    <p class="novel-description-large">
+                        <%= novel.description %>
+                    </p>
+                    <div class="novel-stats-large">
+                        <div class="stat">
+                            <span class="stat-number">
+                                <%= novel.totalChapters %>
+                            </span>
+                            <span class="stat-label">Chapter<%= novel.totalChapters !==1 ? 's' : '' %></span>
                         </div>
-                    <% }) %>
+                        <div class="stat">
+                            <span class="stat-number">
+                                <%= novel.lastUpdated %>
+                            </span>
+                            <span class="stat-label">Last Updated</span>
+                        </div>
+                    </div>
                 </div>
-            <% } %>
+            </div>
+        </div>
+
+        <div class="chapters-section">
+            <div class="chapters-container">
+                <div class="chapters-header">
+                    <h2>Chapters</h2>
+                    <% if (novel.chapters.length> 0) { %>
+                        <a href="/chapters/<%= novel.id %>/1" class="btn btn-primary">
+                            Start Reading
+                        </a>
+                        <% } %>
+                </div>
+
+                <% if (novel.chapters.length===0) { %>
+                    <div class="no-chapters">
+                        <p>No chapters available yet. Check back later!</p>
+                    </div>
+                    <% } else { %>
+                        <div class="chapters-list">
+                            <% novel.chapters.forEach(chapter=> { %>
+                                <div class="chapter-item">
+                                    <div class="chapter-info">
+                                        <h3 class="chapter-title">
+                                            <a href="/chapters/<%= novel.id %>/<%= chapter.number %>">
+                                                Chapter <%= chapter.number %>: <%= chapter.title %>
+                                            </a>
+                                        </h3>
+                                        <p class="chapter-date">
+                                            Published: <%= chapter.publishDate %>
+                                        </p>
+                                    </div>
+                                    <div class="chapter-actions">
+                                        <a href="/chapters/<%= novel.id %>/<%= chapter.number %>"
+                                            class="btn btn-secondary btn-small">
+                                            Read Chapter
+                                        </a>
+                                    </div>
+                                </div>
+                                <% }) %>
+                        </div>
+                        <% } %>
+            </div>
+        </div>
+
+        <div class="navigation-section">
+            <div class="navigation-container">
+                <a href="/" class="btn btn-outline">
+                    ← Back to Home
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="navigation-section">
-        <div class="navigation-container">
-            <a href="/" class="btn btn-outline">
-                ← Back to Home
-            </a>
-        </div>
-    </div>
-</div>
-
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>
