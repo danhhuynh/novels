@@ -2,8 +2,61 @@ const express = require('express');
 const router = express.Router();
 const { getNovelById, getChapterInfo, getChapterNavigation, getChapterWithContent } = require('../data/novels');
 
-// Chapter reading page route
-router.get('/:novelId/:chapterNumber', async (req, res) => {
+// Middleware to block common bots/programmatic access (anti-theft)
+const antiBotMiddleware = (req, res, next) => {
+  const userAgent = req.get('User-Agent') || '';
+  const accept = req.get('Accept') || '';
+  const secFetchDest = req.get('Sec-Fetch-Dest');
+  const secFetchMode = req.get('Sec-Fetch-Mode');
+  const xRequestedWith = req.get('X-Requested-With');
+
+  // 1. Block known simple programmatic agents
+  const blockedAgents = ['curl', 'postman', 'python', 'wget', 'httpie', 'insomnia', 'java', 'node', 'go-http-client', 'axios', 'node-fetch', 'libwww-perl'];
+  const uaLower = userAgent.toLowerCase();
+
+  // If no User-Agent, block
+  if (!userAgent) {
+    return serveBotError(res, 'Missing User-Agent');
+  }
+
+  // If known bot User-Agent, block
+  for (const bot of blockedAgents) {
+    if (uaLower.includes(bot)) {
+      return serveBotError(res, 'Prohibited User-Agent');
+    }
+  }
+
+  // 2. Browser request hints
+  // Web browsers request HTML when loading a page
+  if (!accept.includes('text/html')) {
+    return serveBotError(res, 'Invalid Accept Header');
+  }
+
+  // 3. Modern browser Fetch Metadata ( highly reliable if present )
+  // Browsers loading a top-level page will send Sec-Fetch-Dest: document or Sec-Fetch-Mode: navigate
+  if (secFetchDest && secFetchDest !== 'document' && secFetchDest !== 'empty' && secFetchMode !== 'navigate') {
+    // An iframe or image trying to fetch this HTML
+    return serveBotError(res, 'Invalid Fetch Destination');
+  }
+
+  // 4. Block common AJAX scrape patterns on the main chapter route
+  if (xRequestedWith === 'XMLHttpRequest') {
+    return serveBotError(res, 'Direct AJAX fetching blocked');
+  }
+
+  next(); // Passes checks, allow request
+};
+
+function serveBotError(res, reason) {
+  return res.status(403).render('error', {
+    title: 'Access Denied',
+    message: 'We have detected unusual traffic from your network or client, which suggests automated access. For security and anti-theft reasons, programmatic access is blocked.',
+    statusCode: 403
+  });
+}
+
+// Chapter reading page route (Protected)
+router.get('/:novelId/:chapterNumber', antiBotMiddleware, async (req, res) => {
   try {
     const { novelId, chapterNumber } = req.params;
     const chapterNum = parseInt(chapterNumber);
