@@ -141,7 +141,7 @@
         }
     </style>
 
-    <script>
+    <script nonce="<%= nonce %>">
         function jumpToChapter(chapterNumber) {
             if (chapterNumber && chapterNumber !== '<%= chapterNumber %>') {
                 window.location.href = `/chapters/<%= novel.id %>/${chapterNumber}`;

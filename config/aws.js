@@ -13,7 +13,7 @@ const s3 = new AWS.S3();
 const config = {
   bucketName: process.env.S3_BUCKET_NAME,
   region: process.env.S3_REGION,
-  bucketUrl: `https://${process.env.S3_BUCKET_NAME}.${process.env.S3_REGION}.amazonaws.com`
+  bucketUrl: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com`
 };
 
 /**

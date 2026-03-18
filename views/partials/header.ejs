@@ -6,32 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Vô Ngữ Quán — Đọc truyện, tiểu thuyết, linh dị, tiên hiệp, kiếm hiệp, truyện chữ online miễn phí. Thư viện truyện chọn lọc, cập nhật nhanh nhất.">
-    <meta name="keywords" content="truyện chữ, đọc truyện, tiểu thuyết, linh dị, tiên hiệp, kiếm hiệp, truyện online, vô ngữ quán, novelreads">
+    <meta name="keywords"
+        content="truyện chữ, đọc truyện, tiểu thuyết, linh dị, tiên hiệp, kiếm hiệp, truyện online, vô ngữ quán, novelreads">
     <meta name="author" content="Vô Ngữ Quán">
     <meta property="og:title" content="<%= typeof title !== 'undefined' ? title + ' — Vô Ngữ Quán' : 'Vô Ngữ Quán' %>">
-    <meta property="og:description" content="Vô Ngữ Quán — Đọc truyện, tiểu thuyết, linh dị, tiên hiệp, kiếm hiệp, truyện chữ online miễn phí. Thư viện truyện chọn lọc, cập nhật nhanh nhất.">
+    <meta property="og:description"
+        content="Vô Ngữ Quán — Đọc truyện, tiểu thuyết, linh dị, tiên hiệp, kiếm hiệp, truyện chữ online miễn phí. Thư viện truyện chọn lọc, cập nhật nhanh nhất.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vonguquan.com/">
     <meta property="og:site_name" content="Vô Ngữ Quán">
     <meta property="og:locale" content="vi_VN">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title + ' — Vô Ngữ Quán' : 'Vô Ngữ Quán' %>">
-    <meta name="twitter:description" content="Vô Ngữ Quán — Đọc truyện, tiểu thuyết, linh dị, tiên hiệp, kiếm hiệp, truyện chữ online miễn phí. Thư viện truyện chọn lọc, cập nhật nhanh nhất.">
+    <meta name="twitter:description"
+        content="Vô Ngữ Quán — Đọc truyện, tiểu thuyết, linh dị, tiên hiệp, kiếm hiệp, truyện chữ online miễn phí. Thư viện truyện chọn lọc, cập nhật nhanh nhất.">
     <link rel="icon" href="/assets/logo.png" type="image/png">
     <title>
-        <%= typeof title !== 'undefined' ? title + ' — Vô Ngữ Quán' : 'Vô Ngữ Quán' %>
+        <%= typeof title !=='undefined' ? title + ' — Vô Ngữ Quán' : 'Vô Ngữ Quán' %>
     </title>
     <link rel="stylesheet" href="/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-        <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K5YJC93ZVJ"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K5YJC93ZVJ" nonce="<%= nonce %>"></script>
+    <script nonce="<%= nonce %>">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'G-K5YJC93ZVJ');
+        gtag('config', 'G-K5YJC93ZVJ');
     </script>
 </head>
 
@@ -40,7 +43,8 @@
         <nav class="navbar">
             <div class="container nav-container">
                 <a href="/" class="nav-logo">
-                    <img src="/assets/logo.png" alt="Vô Ngữ Quán Logo" class="logo-icon" style="width:32px;height:32px;">
+                    <img src="/assets/logo.png" alt="Vô Ngữ Quán Logo" class="logo-icon"
+                        style="width:32px;height:32px;">
                     <span class="logo-text">Vô Ngữ Quán</span>
                 </a>
                 <div class="nav-menu">

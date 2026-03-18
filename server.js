@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
+const crypto = require('crypto');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
@@ -14,16 +15,23 @@ const { initializeDb } = require('./database/db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Generate Nonce Middleware for CSP
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString('hex');
+  next();
+});
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.nonce}'`, "https://www.googletagmanager.com"],
       scriptSrcAttr: ["'unsafe-inline'"], // Allow onclick handlers
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://www.google-analytics.com"],
     },
   },
 }));
