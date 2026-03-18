@@ -17,13 +17,26 @@ const config = {
 };
 
 /**
- * Get cover image URL
+ * Get cover image URL (Proxy through server to avoid 403 on private bucket)
  * @param {string} coverImage - Cover image filename
- * @returns {string} Full URL to cover image
+ * @returns {string} Proxy URL to cover image
  */
 function getCoverImageUrl(coverImage) {
   if (!coverImage) return null;
-  return `${config.bucketUrl}/images/${coverImage}`;
+  return `/api/proxy-cover/${encodeURIComponent(coverImage)}`;
+}
+
+/**
+ * Get cover image stream from S3
+ * @param {string} coverImage - Cover image filename
+ * @returns {Object} S3 read stream
+ */
+function getCoverImageStream(coverImage) {
+  const params = {
+    Bucket: config.bucketName,
+    Key: `images/${coverImage}`
+  };
+  return s3.getObject(params).createReadStream();
 }
 
 /**
@@ -102,6 +115,7 @@ module.exports = {
   s3,
   config,
   getCoverImageUrl,
+  getCoverImageStream,
   getChapterContentUrl,
   getChapterContent,
   chapterExists

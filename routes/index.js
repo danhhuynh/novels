@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAllNovels, searchNovels, getAllGenres } = require('../data/novels');
+const { getCoverImageStream } = require('../config/aws');
 
 // Homepage route
 router.get('/', async (req, res) => {
@@ -53,6 +54,29 @@ router.get('/novels', async (req, res) => {
   } catch (err) {
     console.error('Error in novels API:', err);
     res.status(500).json({ error: 'Failed to fetch novels' });
+  }
+});
+
+// S3 Image Proxy Route
+router.get('/proxy-cover/:filename', (req, res) => {
+  const { filename } = req.params;
+  try {
+    const stream = getCoverImageStream(filename);
+
+    // Set basic headers
+    if (filename.endsWith('.webp')) res.setHeader('Content-Type', 'image/webp');
+    else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) res.setHeader('Content-Type', 'image/jpeg');
+    else if (filename.endsWith('.png')) res.setHeader('Content-Type', 'image/png');
+
+    stream.on('error', (err) => {
+      console.error('S3 Stream Error:', err);
+      if (!res.headersSent) res.status(404).send('Not Found');
+    });
+
+    stream.pipe(res);
+  } catch (err) {
+    console.error('Proxy Cover Error:', err);
+    res.status(500).send('Internal Server Error');
   }
 });
 
