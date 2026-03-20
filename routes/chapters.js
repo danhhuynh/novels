@@ -99,6 +99,9 @@ router.get('/:novelId/:chapterNumber', antiBotMiddleware, async (req, res) => {
       chapterContent = generateSampleContent(novel.title, chapterInfo.title, chapterNum);
     }
 
+    // Inject stealth anti-theft watermarks into the final content before serving
+    chapterContent = injectWatermarks(chapterContent);
+
     res.render('chapter', {
       title: `${novel.title} - Chapter ${chapterNum}: ${chapterInfo.title}`,
       novel,
@@ -147,6 +150,78 @@ function generateSampleContent(novelTitle, chapterTitle, chapterNumber) {
 <p>Nội dung chương ${chapterNumber} của "${novelTitle}" đang được cập nhật.</p>
 <p>Vui lòng quay lại sau để đọc nội dung mới nhất.</p>
   `.trim();
+}
+
+/**
+ * Injects randomized stealth watermarks into the HTML content to hinder scraping.
+ * The text is visually hidden from readers but will be grabbed by bots and manual copiers.
+ * @param {string} htmlContent - The raw chapter HTML
+ * @returns {string} The watermarked HTML
+ */
+function injectWatermarks(htmlContent) {
+  if (!htmlContent) return htmlContent;
+
+  const domains = [
+    'vonguquan.com',
+    'vo-ngu-quan.com',
+    'vongu-quan.com',
+    'vo-nguquan.com',
+    'vonguquan . com'
+  ];
+
+  const getWatermark = () => {
+    const domain = domains[Math.floor(Math.random() * domains.length)];
+    // Creates a completely visually hidden span that screen-readers generally ignore,
+    // but copying and HTML scraping captures effortlessly.
+    return `<span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (Nguồn truyện: ${domain}) </span>`;
+  };
+
+  // Attempt to split by paragraph endings
+  let parts = htmlContent.split('</p>');
+
+  if (parts.length > 2) {
+    // Inject watermark in up to 3 random paragraphs
+    let numWatermarks = Math.min(3, parts.length - 1);
+    let targetIndexes = new Set();
+    while (targetIndexes.size < numWatermarks) {
+      targetIndexes.add(Math.floor(Math.random() * (parts.length - 1)));
+    }
+    for (let idx of targetIndexes) {
+      parts[idx] = parts[idx] + getWatermark();
+    }
+    return parts.join('</p>');
+  }
+
+  // Alternative: Attempt to split by line breaks for plain text/br tags
+  let brParts = htmlContent.split(/<br\s*\/?>/i);
+  if (brParts.length > 2) {
+    let numWatermarks = Math.min(3, brParts.length - 1);
+    let targetIndexes = new Set();
+    while (targetIndexes.size < numWatermarks) {
+      targetIndexes.add(Math.floor(Math.random() * (brParts.length - 1)));
+    }
+    for (let idx of targetIndexes) {
+      brParts[idx] = brParts[idx] + getWatermark();
+    }
+    return brParts.join('<br>');
+  }
+
+  // Fallback: split by period if no HTML tags found
+  let dotParts = htmlContent.split('. ');
+  if (dotParts.length > 5) {
+    let numWatermarks = Math.min(3, dotParts.length - 1);
+    let targetIndexes = new Set();
+    while (targetIndexes.size < numWatermarks) {
+      targetIndexes.add(Math.floor(Math.random() * (dotParts.length - 1)));
+    }
+    for (let idx of targetIndexes) {
+      dotParts[idx] = dotParts[idx] + getWatermark() + '. ';
+    }
+    return dotParts.join('');
+  }
+
+  // Last resort
+  return htmlContent + getWatermark();
 }
 
 module.exports = router;
