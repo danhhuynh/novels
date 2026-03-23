@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+
+    <div class="xfd38aff5">
+        <div class="xcc1a5edc">
+            <div class="x0bb57ab3">
+                <div class="xca62c10c">
+                    <% if (statusCode===404) { %>🔍<% } else { %>⚠️<% } %>
+                </div>
+                <h1 class="x32528b59">
+                    <%= statusCode %>
+                </h1>
+                <h2 class="xa1aabb7e">
+                    <%= title %>
+                </h2>
+                <p class="xa2285893">
+                    <%= message %>
+                </p>
+                <div class="xf17210e8">
+                    <a href="/" class="x504854fd">Go Home</a>
+                    <a href="javascript:history.back()" class="x7d440cc3">Go Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

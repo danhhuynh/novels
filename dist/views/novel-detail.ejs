@@ -1,0 +1,101 @@
+<%- include('partials/header') %>
+
+    <div class="x5efa17bf">
+        <div class="xd75cf726">
+            <div class="xd67074f8">
+                <div class="novel-cover-large">
+                    <% if (novel.coverImageUrl) { %>
+                        <img src="<%= novel.coverImageUrl %>" alt="<%= novel.title %> Cover" class="xeff9ae3d">
+                        <% } else { %>
+                            <div class="x4019fe71">
+                                📖
+                            </div>
+                            <% } %>
+                </div>
+                <div class="x232fb59f">
+                    <h1 class="x2f6b16bd">
+                        <%= novel.title %>
+                    </h1>
+                    <p class="x267ae94a">by <%= novel.author %>
+                    </p>
+                    <div class="xe31df97a">
+                        <span class="xa2a68f6e">
+                            <%= novel.genre %>
+                        </span>
+                        <span class="x67e15ccd status-<%= novel.status.toLowerCase() %>">
+                            <%= novel.status %>
+                        </span>
+                    </div>
+                    <p class="x82884146">
+                        <%= novel.description %>
+                    </p>
+                    <div class="xeac6ab99">
+                        <div class="xbcc831ef">
+                            <span class="xebce29cf">
+                                <%= novel.totalChapters %>
+                            </span>
+                            <span class="x8be81cdd">Chapter<%= novel.totalChapters !==1 ? 's' : '' %></span>
+                        </div>
+                        <div class="xbcc831ef">
+                            <span class="xebce29cf">
+                                <%= novel.lastUpdated %>
+                            </span>
+                            <span class="x8be81cdd">Last Updated</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="xfa726df8">
+            <div class="x8b8577cd">
+                <div class="x22d7ed7c">
+                    <h2>Chapters</h2>
+                    <% if (novel.chapters.length> 0) { %>
+                        <a href="/chapters/<%= novel.id %>/1" class="btn x504854fd">
+                            Start Reading
+                        </a>
+                        <% } %>
+                </div>
+
+                <% if (novel.chapters.length===0) { %>
+                    <div class="xe7b79aee">
+                        <p>No chapters available yet. Check back later!</p>
+                    </div>
+                    <% } else { %>
+                        <div class="x20e3c446">
+                            <% novel.chapters.forEach(chapter=> { %>
+                                <div class="x7446f1c9">
+                                    <div class="chapter-info">
+                                        <h3 class="xb847592b">
+                                            <a href="/chapters/<%= novel.id %>/<%= chapter.number %>">
+                                                Chapter <%= chapter.number %>: <%= chapter.title %>
+                                            </a>
+                                        </h3>
+                                        <p class="x776603f6">
+                                            Published: <%= chapter.publishDate %>
+                                        </p>
+                                    </div>
+                                    <div class="xe842b066">
+                                        <a href="/chapters/<%= novel.id %>/<%= chapter.number %>"
+                                            class="btn x7d440cc3 xcbe0273d">
+                                            Read Chapter
+                                        </a>
+                                    </div>
+                                </div>
+                                <% }) %>
+                        </div>
+                        <% } %>
+            </div>
+        </div>
+
+        <div class="x3c2b2bda">
+            <div class="x08059c87">
+                <a href="/" class="btn xcf94d859">
+                    ← Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

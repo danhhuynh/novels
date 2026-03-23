@@ -48,11 +48,15 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // View engine setup
+const isProd = process.env.NODE_ENV === 'production';
+const viewsPath = isProd ? path.join(__dirname, 'dist/views') : path.join(__dirname, 'views');
+const publicPath = isProd ? path.join(__dirname, 'dist/public') : path.join(__dirname, 'public');
+
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', viewsPath);
 
 // Static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(publicPath));
 
 // Body parser middleware
 app.use(express.json());
