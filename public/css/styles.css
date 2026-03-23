@@ -1129,7 +1129,7 @@ a:hover {
   }
 
   .chapter-text {
-    font-size: 1.05rem !important;
+    font-size: 1.05rem;
   }
 
   .chapter-text p {

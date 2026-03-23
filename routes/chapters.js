@@ -171,9 +171,8 @@ function injectWatermarks(htmlContent) {
 
   const getWatermark = () => {
     const domain = domains[Math.floor(Math.random() * domains.length)];
-    // Creates a completely visually hidden span that screen-readers generally ignore,
-    // but copying and HTML scraping captures effortlessly.
-    return `<span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (Nguồn truyện: ${domain}) </span>`;
+    // Creates a subtle, visible credit within the text.
+    return `<span style="opacity: 0.5; font-size: 0.85em; font-style: italic;"> (Nguồn truyện: ${domain}) </span>`;
   };
 
   // Attempt to split by paragraph endings

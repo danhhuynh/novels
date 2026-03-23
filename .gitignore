@@ -33,3 +33,4 @@ coverage/
 
 database/novels.db
 package-lock.json
+dist/
