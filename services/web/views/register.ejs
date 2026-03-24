@@ -82,13 +82,31 @@
         }
 
         .error-message {
-            color: var(--accent-red);
-            background: rgba(239, 68, 68, 0.1);
-            padding: 0.8rem;
-            border-radius: var(--radius-sm);
+            color: #fff;
+            background: rgba(239, 68, 68, 0.8);
+            padding: 1rem;
+            border-radius: var(--radius-md);
             margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             display: none;
+            border-left: 4px solid #b91c1c;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
     </style>
 
@@ -166,7 +184,14 @@
                 window.location.href = '/';
 
             } catch (err) {
-                errorBox.textContent = err.message;
+                // If it's a JSON error with details, show them
+                let msg = err.message;
+                try {
+                    const parsed = JSON.parse(err.message);
+                    if (parsed.details) msg = `${parsed.error}: ${parsed.details}`;
+                } catch (e) { }
+
+                errorBox.innerHTML = `<strong>Lỗi:</strong> ${msg}`;
                 errorBox.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Đăng Ký Tài Khoản';

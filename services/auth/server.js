@@ -11,7 +11,7 @@ const PORT = process.env.AUTH_PORT || 3001;
 
 // Security middleware
 app.use(helmet());
-
+app.set('trust proxy', 1);
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,

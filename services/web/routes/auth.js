@@ -36,8 +36,8 @@ router.post('/login', async (req, res) => {
     } catch (error) {
         console.error('Login proxy error:', error.response?.data || error.message);
         const status = error.response?.status || 500;
-        const errMessage = error.response?.data?.error || 'Login failed';
-        res.status(status).json({ error: errMessage });
+        const errData = error.response?.data || { error: 'Login failed' };
+        res.status(status).json(errData);
     }
 });
 
@@ -59,8 +59,8 @@ router.post('/register', async (req, res) => {
     } catch (error) {
         console.error('Register proxy error:', error.response?.data || error.message);
         const status = error.response?.status || 500;
-        const errMessage = error.response?.data?.error || 'Registration failed';
-        res.status(status).json({ error: errMessage });
+        const errData = error.response?.data || { error: 'Registration failed' };
+        res.status(status).json(errData);
     }
 });
 
