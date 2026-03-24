@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
         if (password.length < 6) {
             return res.status(400).json({ error: 'Password must be at least 6 characters' });
         }
-
+console.log('USERS_TABLE', USERS_TABLE);
         // Check if email already exists
         const existingUser = await docClient.send(new GetCommand({
             TableName: USERS_TABLE,

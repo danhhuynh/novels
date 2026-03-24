@@ -1,7 +1,10 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+
 // Assuming your router is in the same directory or adjust path accordingly
-const authRouter = require('./routes/auth'); 
+const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3003;
@@ -30,8 +33,8 @@ app.use('/auth', authRouter);
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
+    res.json({
+        status: 'ok',
         service: 'novels-auth',
         ip: req.ip // Useful for debugging to see what IP Express detects
     });
