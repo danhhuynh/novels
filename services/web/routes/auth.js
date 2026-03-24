@@ -23,28 +23,47 @@ const cookieConfig = {
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log(`Proxying login for ${email} to ${AUTH_SERVICE_URL}`);
 
-        // Call internal private Auth Service
         const response = await axios.post(`${AUTH_SERVICE_URL}/auth/login`, {
             email,
             password
-        });
+        }, { timeout: 5000 });
 
-        // Setup HttpOnly Cookie with JWT token
+        // 1. Safety check: ensure response.data exists
+        if (!response.data || !response.data.token) {
+            throw new Error('Auth service returned empty or invalid data');
+        }
+
         const { token, user } = response.data;
-        res.cookie('token', token, cookieConfig);
 
-        // Add explicit success status and ensure headers are sent properly
-        res.status(200).json({ 
-            message: 'Login successful', 
-            user,
-            success: true 
+        // 2. Set the cookie
+        res.cookie('token', token, cookieConfig);
+        console.log(`Login successful for ${email}`);
+
+        // 3. Send and RETURN to ensure no further code executes
+        return res.status(200).json({
+            message: 'Login successful',
+            user: user || {},
+            success: true
         });
+
     } catch (error) {
-        console.error('Login proxy error:', error.response?.data || error.message);
-        const status = error.response?.status || 500;
-        const errData = error.response?.data || { error: 'Login failed' };
-        res.status(status).json(errData);
+        // Detailed logging to your EC2 terminal
+        console.error('--- PROXY ERROR ---');
+        if (error.response) {
+            console.error('Status:', error.response.status);
+            console.error('Data:', error.response.data);
+            return res.status(error.response.status).json(error.response.data);
+        } else {
+            console.error('Message:', error.message);
+            if (error.code === 'ECONNREFUSED') {
+                console.error("❌ ERROR: Auth Service is NOT running on port 3001!");
+            } else if (error.code === 'ETIMEDOUT') {
+                console.error("❌ ERROR: Connection to Auth Service timed out!");
+            }
+            return res.status(500).json({ error: 'Auth service unreachable', details: error.message });
+        }
     }
 });
 

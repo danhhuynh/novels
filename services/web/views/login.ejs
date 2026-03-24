@@ -112,30 +112,47 @@
 
     <div class="container">
         <div class="auth-container">
-            <div class="auth-header">
-                <h1 class="auth-title">Đăng Nhập</h1>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Chào mừng bạn quay lại <b>Vô Ngữ Quán</b></p>
-            </div>
-
-            <div id="errorBox" class="error-message"></div>
-
-            <form id="loginForm">
-                <div class="auth-form-group">
-                    <label class="auth-label" for="email">Tài khoản Email</label>
-                    <input type="email" id="email" class="auth-input" placeholder="nhapemail@example.com" required>
+            <% if (locals.user) { %>
+                <div class="auth-header">
+                    <h1 class="auth-title">Đã Đăng Nhập</h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">
+                        Bạn đang đăng nhập với tên <b>
+                            <%= user.username %>
+                        </b> (<%= user.email %>)
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <a href="/" class="btn btn-primary auth-btn">Về Trang Chủ</a>
+                        <button onclick="handleLogout()" class="btn btn-outline auth-btn">Đăng Xuất</button>
+                    </div>
                 </div>
+                <% } else { %>
+                    <div class="auth-header">
+                        <h1 class="auth-title">Đăng Nhập</h1>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">Chào mừng bạn quay lại <b>Vô Ngữ
+                                Quán</b></p>
+                    </div>
 
-                <div class="auth-form-group">
-                    <label class="auth-label" for="password">Mật khẩu</label>
-                    <input type="password" id="password" class="auth-input" placeholder="••••••••" required>
-                </div>
+                    <div id="errorBox" class="error-message"></div>
 
-                <button type="submit" class="btn btn-primary auth-btn" id="submitBtn">Đăng Nhập</button>
-            </form>
+                    <form id="loginForm">
+                        <div class="auth-form-group">
+                            <label class="auth-label" for="email">Tài khoản Email</label>
+                            <input type="email" id="email" class="auth-input" placeholder="nhapemail@example.com"
+                                required>
+                        </div>
 
-            <div class="auth-footer">
-                Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
-            </div>
+                        <div class="auth-form-group">
+                            <label class="auth-label" for="password">Mật khẩu</label>
+                            <input type="password" id="password" class="auth-input" placeholder="••••••••" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary auth-btn" id="submitBtn">Đăng Nhập</button>
+                    </form>
+
+                    <div class="auth-footer">
+                        Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+                    </div>
+                    <% } %>
         </div>
     </div>
 
@@ -175,7 +192,7 @@
                 // Success - show success message and wait for cookie to be set
                 submitBtn.textContent = 'Đăng nhập thành công!';
                 submitBtn.style.backgroundColor = 'var(--success-color)';
-                
+
                 // Use setTimeout to ensure cookie is processed before redirect
                 // Also use window.location.replace to avoid back button issues
                 setTimeout(() => {

@@ -18,8 +18,10 @@ function extractUserVars(req, res, next) {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         res.locals.user = decoded; // Contains { email, username }
+        console.log(`✅ User identified from token: ${decoded.username}`);
     } catch (err) {
         // Token invalid or expired
+        console.error('❌ JWT verification failed:', err.message);
         res.locals.user = null;
     }
 
