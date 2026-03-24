@@ -1,35 +1,40 @@
 const express = require('express');
-const path = require('path');
-const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config({ path: path.join(__dirname, '../../.env') });
-
-const authRouter = require('./routes/auth');
+// Assuming your router is in the same directory or adjust path accordingly
+const authRouter = require('./routes/auth'); 
 
 const app = express();
-const PORT = process.env.AUTH_PORT || 3001;
+const PORT = process.env.PORT || 3003;
 
-// Security middleware
-app.use(helmet());
+// --- 1. PROXY SETTING (MUST BE FIRST) ---
+// This fixes the ValidationError and allows the limiter to see real IPs
 app.set('trust proxy', 1);
-// Rate limiting
+
+// --- 2. RATE LIMITER CONFIG ---
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: 'Too many requests from this IP, please try again later.'
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
+
+// Apply the rate limiting middleware to all requests
 app.use(limiter);
 
-// Body parser middleware
+// --- 3. MIDDLEWARE ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// --- 4. ROUTES ---
 app.use('/auth', authRouter);
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', service: 'novels-auth' });
+    res.json({ 
+        status: 'ok', 
+        service: 'novels-auth',
+        ip: req.ip // Useful for debugging to see what IP Express detects
+    });
 });
 
 // 404 handler
@@ -37,16 +42,28 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Not found' });
 });
 
-// Error handler
+// --- 5. ERROR HANDLER ---
 app.use((err, req, res, next) => {
-    console.error(err.stack);
+    console.error('SERVER ERROR:', err.stack);
     res.status(500).json({ error: 'Internal server error' });
 });
 
-// Start server (no DB init needed — DynamoDB is serverless)
-app.listen(PORT, () => {
-    console.log(`Auth service is running on port ${PORT}`);
-    console.log(`Visit: http://localhost:${PORT}`);
+// --- 6. START SERVER ---
+// Explicitly binding to '0.0.0.0' to ensure EC2 accessibility
+const server = app.listen(PORT, '0.0.0.0', (err) => {
+    if (err) {
+        console.error('Failed to bind to port:', err);
+        process.exit(1);
+    }
+    console.log(`✅ Auth service successfully started!`);
+    console.log(`Port: ${PORT}`);
+    console.log(`Interface: 0.0.0.0 (Publicly Accessible)`);
+    console.log(`Trust Proxy: ${app.get('trust proxy')}`);
+});
+
+// Handle graceful shutdown or unhandled rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 module.exports = app;
