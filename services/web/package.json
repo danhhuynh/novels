@@ -1,0 +1,25 @@
+{
+    "name": "novels-web",
+    "version": "1.0.0",
+    "description": "Novel reading web application",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js",
+        "build": "node scripts/obfuscate.js"
+    },
+    "dependencies": {
+        "aws-sdk": "^2.1490.0",
+        "compression": "^1.7.4",
+        "dotenv": "^16.3.1",
+        "ejs": "^3.1.9",
+        "express": "^5.2.1",
+        "express-rate-limit": "^6.7.0",
+        "helmet": "^7.0.0",
+        "sqlite3": "^5.1.6",
+        "@aws-sdk/client-s3": "^3.491.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.14"
+    }
+}

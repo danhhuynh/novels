@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getNovelById, getChapterInfo, getChapterNavigation, getChapterWithContent } = require('../data/novels');
+const { getNovelById, getChapterInfo, getChapterNavigation, getChapterWithContent } = require('../../../shared/data/novels');
 
 // Middleware to block common bots/programmatic access (anti-theft)
 const antiBotMiddleware = (req, res, next) => {

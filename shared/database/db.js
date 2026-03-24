@@ -64,6 +64,16 @@ function createTables() {
       )
     `;
 
+    const createUsersTable = `
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
     db.serialize(() => {
       db.run(createNovelsTable, (err) => {
         if (err) {
@@ -73,6 +83,13 @@ function createTables() {
       });
 
       db.run(createChaptersTable, (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+      });
+
+      db.run(createUsersTable, (err) => {
         if (err) {
           reject(err);
           return;

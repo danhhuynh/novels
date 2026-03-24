@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { getAllNovels, searchNovels, getAllGenres } = require('../data/novels');
-const { getCoverImageStream } = require('../config/aws');
+const { getAllNovels, searchNovels, getAllGenres } = require('../../../shared/data/novels');
+const { getCoverImageStream } = require('../../../shared/config/aws');
 
 // Homepage route
 router.get('/', async (req, res) => {

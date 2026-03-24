@@ -1,15 +1,30 @@
 module.exports = {
-    apps: [{
-        name: "novels-app",
-        script: "./server.js",
-        instances: "1", // Or "max" for clustering across all CPU cores
-        exec_mode: "fork",
-        env: {
-            NODE_ENV: "development",
+    apps: [
+        {
+            name: "novels-web",
+            script: "./services/web/server.js",
+            instances: "1",
+            exec_mode: "fork",
+            env: {
+                NODE_ENV: "development",
+            },
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
         },
-        env_production: {
-            NODE_ENV: "production",
-            PORT: 3000
+        {
+            name: "novels-auth",
+            script: "./services/auth/server.js",
+            instances: "1",
+            exec_mode: "fork",
+            env: {
+                NODE_ENV: "development",
+            },
+            env_production: {
+                NODE_ENV: "production",
+                AUTH_PORT: 3001
+            }
         }
-    }]
+    ]
 };

@@ -31,6 +31,12 @@ coverage/
 # AWS credentials (local development)
 .aws/
 
-database/novels.db
-package-lock.json
+# Database
+shared/database/novels.db
+
+# Build output
+services/web/dist/
 dist/
+
+# Lock files
+package-lock.json

@@ -4,13 +4,13 @@ const helmet = require('helmet');
 const crypto = require('crypto');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 // Import routes
 const indexRouter = require('./routes/index');
 const novelsRouter = require('./routes/novels');
 const chaptersRouter = require('./routes/chapters');
-const { initializeDb } = require('./database/db');
+const { initializeDb } = require('../../shared/database/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getNovelById, getNovelsByGenre } = require('../data/novels');
+const { getNovelById, getNovelsByGenre } = require('../../../shared/data/novels');
 
 // Novel detail page route
 router.get('/:novelId', async (req, res) => {

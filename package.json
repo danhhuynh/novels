@@ -1,27 +1,27 @@
 {
-  "name": "novels-app",
+  "name": "novels-monorepo",
   "version": "1.0.0",
-  "description": "Novel reading application with SQLite database",
-  "main": "server.js",
+  "description": "Novel reading platform monorepo",
+  "private": true,
   "scripts": {
-    "start": "node server.js",
-    "seed": "node database/seed.js",
-    "dev": "nodemon server.js",
-    "build": "node scripts/obfuscate.js",
-    "pm2-reload": "npm run build && pm2 reload novels-app"
+    "install:web": "cd services/web && npm install",
+    "install:auth": "cd services/auth && npm install",
+    "install:all": "npm run install:web && npm run install:auth",
+    "dev:web": "cd services/web && npm run dev",
+    "dev:auth": "cd services/auth && npm run dev",
+    "start:web": "cd services/web && npm start",
+    "start:auth": "cd services/auth && npm start",
+    "build": "cd services/web && npm run build",
+    "seed": "node shared/database/seed.js",
+    "pm2:start": "npm run build && pm2 start ecosystem.config.js --env production",
+    "pm2:reload:web": "npm run build && pm2 reload novels-web",
+    "pm2:reload:auth": "pm2 reload novels-auth",
+    "pm2:reload:all": "npm run build && pm2 reload novels-web && pm2 reload novels-auth"
   },
   "dependencies": {
-    "aws-sdk": "^2.1490.0",
-    "compression": "^1.7.4",
-    "dotenv": "^16.3.1",
-    "ejs": "^3.1.9",
-    "express": "^5.2.1",
-    "express-rate-limit": "^6.7.0",
-    "helmet": "^7.0.0",
-    "sqlite3": "^5.1.6",
-    "@aws-sdk/client-s3": "^3.491.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@aws-sdk/client-s3": "^3.1015.0",
+    "aws-sdk": "^2.1693.0",
+    "dotenv": "^16.6.1",
+    "sqlite3": "^5.1.7"
   }
 }
