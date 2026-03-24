@@ -4,12 +4,15 @@ const helmet = require('helmet');
 const crypto = require('crypto');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 // Import routes
 const indexRouter = require('./routes/index');
 const novelsRouter = require('./routes/novels');
 const chaptersRouter = require('./routes/chapters');
+const authRouter = require('./routes/auth');
+const { extractUserVars } = require('./middleware/auth');
 const { initializeDb } = require('../../shared/database/db');
 
 const app = express();
@@ -58,13 +61,18 @@ app.set('views', viewsPath);
 // Static files
 app.use(express.static(publicPath));
 
-// Body parser middleware
+// Body parser and cookies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Custom Middleware
+app.use(extractUserVars); // Extract user from JWT cookie on every request
 
 // Routes
 app.use('/', indexRouter);
-app.use('/api', indexRouter); // This will map /api/novels and /api/search correctly now
+app.use('/api', indexRouter);
+app.use('/api/auth', authRouter); // Auth proxy routes
 app.use('/novels', novelsRouter);
 app.use('/chapters', chaptersRouter);
 

@@ -1,0 +1,164 @@
+<%- include('partials/header') %>
+
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-color) 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            color: var(--text-color);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.1);
+            padding: 0.8rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">Đăng Nhập</h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Chào mừng bạn quay lại <b>Vô Ngữ Quán</b></p>
+            </div>
+
+            <div id="errorBox" class="error-message"></div>
+
+            <form id="loginForm">
+                <div class="auth-form-group">
+                    <label class="auth-label" for="email">Tài khoản Email</label>
+                    <input type="email" id="email" class="auth-input" placeholder="nhapemail@example.com" required>
+                </div>
+
+                <div class="auth-form-group">
+                    <label class="auth-label" for="password">Mật khẩu</label>
+                    <input type="password" id="password" class="auth-input" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary auth-btn" id="submitBtn">Đăng Nhập</button>
+            </form>
+
+            <div class="auth-footer">
+                Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <script nonce="<%= nonce %>">
+        const form = document.getElementById('loginForm');
+        const errorBox = document.getElementById('errorBox');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            errorBox.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang xử lý...';
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Đăng nhập thất bại');
+                }
+
+                // Success, cookie is set automatically
+                window.location.href = '/';
+
+            } catch (err) {
+                errorBox.textContent = err.message;
+                errorBox.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Đăng Nhập';
+            }
+        });
+    </script>
+
+    <%- include('partials/footer') %>

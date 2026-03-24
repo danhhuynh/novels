@@ -46,6 +46,18 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// Render Login Page
+router.get('/login', (req, res) => {
+  if (res.locals.user) return res.redirect('/');
+  res.render('login', { title: 'Đăng Nhập' });
+});
+
+// Render Register Page
+router.get('/register', (req, res) => {
+  if (res.locals.user) return res.redirect('/');
+  res.render('register', { title: 'Đăng Ký' });
+});
+
 // API Get All Novels
 router.get('/novels', async (req, res) => {
   try {

@@ -50,7 +50,35 @@
                 <div class="nav-menu">
                     <a href="/" class="nav-link">Trang Chủ</a>
                     <a href="/#genres" class="nav-link">Thể Loại</a>
+                    <% if (locals.user) { %>
+                        <div class="user-menu"
+                            style="display: flex; align-items: center; gap: 12px; margin-left: 10px;">
+                            <span class="user-name" style="color: var(--primary-color); font-weight: 500;">
+                                <%= user.username %>
+                            </span>
+                            <button onclick="handleLogout()" class="btn btn-outline"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Đăng Xuất</button>
+                        </div>
+                        <% } else { %>
+                            <div class="auth-buttons" style="display: flex; gap: 8px; margin-left: 10px;">
+                                <a href="/login" class="btn btn-outline"
+                                    style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Đăng Nhập</a>
+                                <a href="/register" class="btn btn-primary"
+                                    style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Đăng Ký</a>
+                            </div>
+                            <% } %>
                 </div>
+
+                <script nonce="<%= nonce %>">
+                    async function handleLogout() {
+                        try {
+                            const res = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (res.ok) window.location.reload();
+                        } catch (err) {
+                            console.error('Logout failed', err);
+                        }
+                    }
+                </script>
             </div>
         </nav>
     </header>
