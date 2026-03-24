@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || 'http://localhost:3001';
+const rawAuthUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:3001';
+// Remove any accidental trailing semicolons, slashes, or whitespace from the .env variable
+const AUTH_SERVICE_URL = rawAuthUrl.replace(/[;\/\s]+$/, '');
 
 /**
  * Common configuration for HttpOnly JWT cookies
