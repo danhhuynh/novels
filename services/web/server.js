@@ -17,6 +17,7 @@ const { initializeDb } = require('../../shared/database/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.set('trust proxy', 1);
 
 // Generate Nonce Middleware for CSP
 app.use((req, res, next) => {
