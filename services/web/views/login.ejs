@@ -167,8 +167,20 @@
                     throw new Error(data.error || 'Đăng nhập thất bại');
                 }
 
-                // Success, cookie is set automatically
-                window.location.href = '/';
+                // Verify we got a successful response with expected data
+                if (!data.success || !data.user) {
+                    throw new Error('Phản hồi từ server không đúng định dạng');
+                }
+
+                // Success - show success message and wait for cookie to be set
+                submitBtn.textContent = 'Đăng nhập thành công!';
+                submitBtn.style.backgroundColor = 'var(--success-color)';
+                
+                // Use setTimeout to ensure cookie is processed before redirect
+                // Also use window.location.replace to avoid back button issues
+                setTimeout(() => {
+                    window.location.replace('/');
+                }, 150);
 
             } catch (err) {
                 // If it's a JSON error with details, show them
@@ -182,6 +194,7 @@
                 errorBox.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Đăng Nhập';
+                submitBtn.style.backgroundColor = ''; // Reset button color
             }
         });
     </script>

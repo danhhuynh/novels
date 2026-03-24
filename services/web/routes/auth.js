@@ -34,7 +34,12 @@ router.post('/login', async (req, res) => {
         const { token, user } = response.data;
         res.cookie('token', token, cookieConfig);
 
-        res.json({ message: 'Login successful', user });
+        // Add explicit success status and ensure headers are sent properly
+        res.status(200).json({ 
+            message: 'Login successful', 
+            user,
+            success: true 
+        });
     } catch (error) {
         console.error('Login proxy error:', error.response?.data || error.message);
         const status = error.response?.status || 500;
