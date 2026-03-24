@@ -13,10 +13,20 @@ const seedData = {
       totalChapters: 1000,
       lastUpdated: '2024-03-15'
     },
+    {
+      id: 'ta-lam-tong-chu',
+      title: 'Ta Làm Tông Chủ',
+      author: 'Ny Na Phù',
+      description: 'Bắt Đầu Làm Tông Chủ: Quy Củ Của Ta Có Chút Dã',
+      coverImage: 'ta-lam-tong-chu.webp',
+      genre: 'Huyền Huyễn',
+      status: 'In Progress',
+      totalChapters: 1000,
+      lastUpdated: '2024-03-15'
+    },
   ],
   chapters: [
-    // Vớt Thi Nhân
-    { novelId: 'vot-thi-nhan', number: 1, title: 'Chương 1', publishDate: '2024-03-15' },
+    // Will be generated programmatically below
   ]
 };
 
@@ -24,7 +34,17 @@ async function seedDatabase() {
   try {
     await initializeDb();
     await createTables();
-    
+
+    // Generate dynamic chapters
+    // Vớt Thi Nhân: 10-31
+    for (let i = 10; i <= 31; i++) {
+      seedData.chapters.push({ novelId: 'vot-thi-nhan', number: i, title: `Chương ${i}`, publishDate: '2024-03-15' });
+    }
+    // Ta Làm Tông Chủ: 345-363
+    for (let i = 345; i <= 363; i++) {
+      seedData.chapters.push({ novelId: 'ta-lam-tong-chu', number: i, title: `Chương ${i}`, publishDate: '2024-03-15' });
+    }
+
     const db = getDb();
 
     // Clear existing data
