@@ -2,7 +2,8 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Database file path
-const DB_PATH = path.join(__dirname, 'novels.db');
+// Database file path - ensure it's absolute to the shared/database directory
+const DB_PATH = path.resolve(__dirname, 'novels.db');
 
 // Create a singleton database connection
 let db = null;
