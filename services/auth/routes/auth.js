@@ -9,7 +9,8 @@ const { DynamoDBDocumentClient, PutCommand, GetCommand, QueryCommand } = require
 const client = new DynamoDBClient({ region: process.env.S3_REGION || 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
-const USERS_TABLE = process.env.DYNAMO_USERS_TABLE || 'novels-users';
+const rawTable = process.env.DYNAMO_USERS_TABLE || 'novels-users';
+const USERS_TABLE = rawTable.replace(/["';\s]/g, ''); // Strip quotes, semicolons, and spaces
 const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret-in-production';
 const JWT_EXPIRY = '7d';
 
@@ -28,7 +29,7 @@ router.post('/register', async (req, res) => {
         if (password.length < 6) {
             return res.status(400).json({ error: 'Password must be at least 6 characters' });
         }
-console.log('USERS_TABLE', USERS_TABLE);
+        console.log('USERS_TABLE', USERS_TABLE);
         // Check if email already exists
         const existingUser = await docClient.send(new GetCommand({
             TableName: USERS_TABLE,
