@@ -8,20 +8,27 @@ const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret-in-production';
  * Does not block request if token is missing or invalid.
  */
 function extractUserVars(req, res, next) {
-    const token = req.cookies.token;
+    const token = req.cookies && req.cookies.token;
+
+    // Debug log to see if any cookies are present
+    console.log(`[AuthMiddleware] Cookies found: ${Object.keys(req.cookies || {}).join(', ') || 'none'}`);
 
     if (!token) {
         res.locals.user = null;
         return next();
     }
 
+    if (!JWT_SECRET || JWT_SECRET === 'change-this-secret-in-production') {
+        console.warn('[AuthMiddleware] ⚠️ JWT_SECRET is using default or missing!');
+    }
+
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         res.locals.user = decoded; // Contains { email, username }
-        console.log(`✅ User identified from token: ${decoded.username}`);
+        console.log(`[AuthMiddleware] ✅ User identified: ${decoded.username} (${decoded.email})`);
     } catch (err) {
         // Token invalid or expired
-        console.error('❌ JWT verification failed:', err.message);
+        console.error(`[AuthMiddleware] ❌ JWT verification failed for token. Error: ${err.message}`);
         res.locals.user = null;
     }
 

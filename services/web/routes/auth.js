@@ -12,9 +12,14 @@ const AUTH_SERVICE_URL = rawAuthUrl.replace(/[;\/\s]+$/, '');
 const cookieConfig = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: 'lax', // Changed from 'strict' for better compatibility on localhost
+    path: '/',       // Explicitly set path to root
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
 };
+
+if (!process.env.JWT_SECRET) {
+    console.warn('⚠️ WARNING: JWT_SECRET is not defined in Web Service environment!');
+}
 
 /**
  * POST /api/auth/login
