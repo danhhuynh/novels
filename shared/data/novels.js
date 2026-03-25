@@ -214,7 +214,7 @@ function getChapterNavigation(novelId, chapterNumber) {
       }
 
       const currentChapter = parseInt(chapterNumber);
-      const totalChapters = chapters.length;
+      const totalChapters = chapters.last.number;
 
       const navigation = {
         currentChapter,
