@@ -29,13 +29,13 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         console.log(`Proxying login for ${email} to ${AUTH_SERVICE_URL}`);
-        res.cookie('token', "token", cookieConfig);
+        // res.cookie('token', "token", cookieConfig);
 
-        return res.status(200).json({
-            message: 'Login successful',
-            user: {},
-            success: true
-        });
+        // return res.status(200).json({
+        //     message: 'Login successful',
+        //     user: {},
+        //     success: true
+        // });
         const response = await axios.post(`${AUTH_SERVICE_URL}/auth/login`, {
             email,
             password
