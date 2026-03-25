@@ -1170,3 +1170,56 @@ a:hover {
     font-size: 3.5rem;
   }
 }
+
+@media (max-width: 768px) {
+  .nav-menu {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    z-index: 1001;
+    display: none;
+  }
+  body.nav-open .nav-menu {
+    display: flex;
+  }
+  .navbar-toggle {
+    display: inline-flex;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+    align-items: center;
+    height: 40px;
+  }
+  .navbar-toggle-icon {
+    width: 28px;
+    height: 3px;
+    background: var(--accent);
+    display: block;
+    border-radius: 2px;
+    position: relative;
+  }
+  .navbar-toggle-icon::before,
+  .navbar-toggle-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 28px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+  .navbar-toggle-icon::before {
+    top: -9px;
+  }
+  .navbar-toggle-icon::after {
+    top: 9px;
+  }
+}
