@@ -77,11 +77,12 @@ a:hover {
 .nav-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   height: 64px;
 }
 
 .nav-logo {
+  margin-right: auto;
   display: flex;
   align-items: center;
   gap: 10px;

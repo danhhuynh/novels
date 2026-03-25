@@ -67,7 +67,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Add simple request logger to debug
+app.use((req, res, next) => {
+    console.log(`[Server] *** REQUEST RECEIVED *** ${req.method} ${req.path} from ${req.ip}`);
+    next();
+});
+
 // Custom Middleware
+console.log('[Server] Registering extractUserVars middleware...');
 app.use(extractUserVars); // Extract user from JWT cookie on every request
 
 // Routes

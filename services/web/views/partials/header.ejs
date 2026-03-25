@@ -36,6 +36,7 @@
 
         gtag('config', 'G-K5YJC93ZVJ');
     </script>
+    <script src="/js/auth-session.js" defer></script>
 </head>
 
 <body>
@@ -69,6 +70,10 @@
                             <% } %>
                 </div>
 
+                <button class="navbar-toggle" aria-label="Mở menu" onclick="document.body.classList.toggle('nav-open')">
+                    <span class="navbar-toggle-icon"></span>
+                </button>
+
                 <script nonce="<%= nonce %>">
                     async function handleLogout() {
                         try {
@@ -84,3 +89,66 @@
     </header>
 
     <main class="main-content">
+        <style>
+            @media (max-width: 768px) {
+                .nav-menu {
+                    position: fixed;
+                    top: 60px;
+                    left: 0;
+                    right: 0;
+                    background: var(--bg-secondary);
+                    flex-direction: column;
+                    align-items: flex-start;
+                    padding: 1rem 2rem;
+                    gap: 1rem;
+                    z-index: 1001;
+                    display: none;
+                }
+                body.nav-open .nav-menu {
+                    display: flex;
+                }
+                .navbar-toggle {
+                    display: inline-flex;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    margin-left: auto;
+                    align-items: center;
+                    height: 40px;
+                }
+                .navbar-toggle-icon {
+                    width: 28px;
+                    height: 3px;
+                    background: var(--accent);
+                    display: block;
+                    border-radius: 2px;
+                    position: relative;
+                }
+                .navbar-toggle-icon::before,
+                .navbar-toggle-icon::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    width: 28px;
+                    height: 3px;
+                    background: var(--accent);
+                    border-radius: 2px;
+                    transition: 0.3s;
+                }
+                .navbar-toggle-icon::before {
+                    top: -9px;
+                }
+                .navbar-toggle-icon::after {
+                    top: 9px;
+                }
+            }
+            @media (max-width: 480px) {
+                .nav-menu {
+                    padding: 1rem 1rem;
+                }
+            }
+        </style>
+    </main>
+</body>
+
+</html>
