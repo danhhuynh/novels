@@ -1,0 +1,41 @@
+name: Deploy Auth to EC2
+
+on:
+  push:
+    paths:
+      - 'services/auth/**'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Zip auth service
+        run: |
+          cd services/auth
+          zip -r ../../auth-deploy.zip .
+
+      - name: Upload to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "auth-deploy.zip"
+          target: "~/"
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            unzip -o ~/auth-deploy.zip -d ~/auth-app
+            cd ~/auth-app
+            npm install --production
+            pm2 restart novels-auth || pm2 start server.js --name novels-auth

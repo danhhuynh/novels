@@ -1,0 +1,41 @@
+name: Deploy Web to Lightsail
+
+on:
+  push:
+    paths:
+      - 'services/web/**'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Zip web service
+        run: |
+          cd services/web
+          zip -r ../../web-deploy.zip .
+
+      - name: Upload to Lightsail
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          source: "web-deploy.zip"
+          target: "~/"
+
+      - name: Deploy on Lightsail
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            unzip -o ~/web-deploy.zip -d ~/web-app
+            cd ~/web-app
+            npm run build
+            pm2 restart novels-web || pm2 start server.js --name novels-web
