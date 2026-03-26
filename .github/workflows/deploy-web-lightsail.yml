@@ -35,7 +35,17 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
-            unzip -o ~/web-deploy.zip -d ~/web-app
-            cd ~/web-app
+            # Ensure required tools are installed
+            command -v unzip >/dev/null 2>&1 || sudo apt-get update && sudo apt-get install -y unzip
+            command -v npm >/dev/null 2>&1 || curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs
+            command -v pm2 >/dev/null 2>&1 || sudo npm install -g pm2
+
+            # Prepare deploy directory
+            sudo mkdir -p /opt/novels
+            sudo unzip -o ~/web-deploy.zip -d /opt/novels
+            cd /opt/novels
+
+            npm install --production
             npm run build
+
             pm2 restart novels-web || pm2 start server.js --name novels-web
