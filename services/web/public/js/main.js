@@ -37,18 +37,34 @@ document.addEventListener('DOMContentLoaded', function () {
         return String(text).replace(/[&<>"']/g, m => map[m]);
     }
 
+    function unwrapDynamo(item) {
+        // If item is a DynamoDB attribute map, unwrap .S fields
+        const out = {};
+        for (const k in item) {
+            if (item[k] && typeof item[k] === 'object' && 'S' in item[k]) out[k] = item[k].S;
+            else out[k] = item[k];
+        }
+        return out;
+    }
+
     function renderMessages(messages) {
         if (!Array.isArray(messages) || !messages.length) {
             chatMessagesBox.innerHTML = '<div class="forum-chat-loading">Chưa có tin nhắn nào.</div>';
             return;
         }
-        chatMessagesBox.innerHTML = messages.map(msg =>
-            `<div class="forum-chat-message">
+        chatMessagesBox.innerHTML = messages.map(rawMsg => {
+            const msg = unwrapDynamo(rawMsg);
+            let timeStr = '';
+            if (msg.created_at) {
+                const d = new Date(msg.created_at);
+                timeStr = isNaN(d) ? '' : d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            }
+            return `<div class="forum-chat-message">
                 <span class="forum-chat-username">${escapeHtml(msg.username || 'Ẩn danh')}</span>:
                 <span class="forum-chat-text">${escapeHtml(msg.message)}</span>
-                <span class="forum-chat-time">${msg.created_at ? new Date(msg.created_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : ''}</span>
-            </div>`
-        ).join('');
+                <span class="forum-chat-time">${timeStr}</span>
+            </div>`;
+        }).join('');
     }
 
     async function fetchMessages() {
