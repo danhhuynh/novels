@@ -8,6 +8,30 @@
 </footer>
 
 <script src="/js/main.js"></script>
+</main>
+
+<!-- Forum Chat Modal UI -->
+<div id="forumChatModal" class="forum-chat-modal hidden">
+    <div class="forum-chat-header">
+        <span>💬 Forum Chat</span>
+        <button id="forumChatToggleBtn" class="forum-chat-toggle" title="Ẩn chat">×</button>
+    </div>
+    <div id="forumChatMessages" class="forum-chat-messages">
+        <!-- Messages will appear here -->
+        <div class="forum-chat-loading">Đang tải tin nhắn...</div>
+    </div>
+<% if (locals.user) { %> 
+
+    <form id="forumChatForm" class="forum-chat-form" autocomplete="off">
+        <input type="text" id="forumChatInput" class="forum-chat-input" placeholder="Nhập tin nhắn..." maxlength="500" autocomplete="off" />
+        <button type="submit" class="forum-chat-send">Gửi</button>
+    </form>
+<% }else{ %>
+    <p class="forum-chat-login-prompt">Vui lòng đăng nhập để tham gia chat.</p>
+<% } %>
+
+</div>
+<button id="forumChatShowBtn" class="forum-chat-show-btn">💬</button>
 </body>
 
 </html>

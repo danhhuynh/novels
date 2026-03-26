@@ -14,6 +14,7 @@ const chaptersRouter = require('./routes/chapters');
 const authRouter = require('./routes/auth');
 const { extractUserVars } = require('./middleware/auth');
 const { initializeDb } = require('../../shared/database/db');
+const forumChatRouter = require('./routes/forum-chat');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -81,6 +82,7 @@ app.use(extractUserVars); // Extract user from JWT cookie on every request
 app.use('/', indexRouter);
 app.use('/api', indexRouter);
 app.use('/api/auth', authRouter); // Auth proxy routes
+app.use('/api/forum-chat', forumChatRouter); // Forum chat proxy
 app.use('/novels', novelsRouter);
 app.use('/chapters', chaptersRouter);
 

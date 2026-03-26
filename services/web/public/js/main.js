@@ -21,6 +21,30 @@ document.addEventListener('DOMContentLoaded', function () {
         showAllBtn.addEventListener('click', showAllNovels);
     }
 
+    // ===== Forum Chat Modal UI Logic =====
+    const chatModal = document.getElementById('forumChatModal');
+    const chatShowBtn = document.getElementById('forumChatShowBtn');
+    const chatToggleBtn = document.getElementById('forumChatToggleBtn');
+    if (chatModal && chatShowBtn && chatToggleBtn) {
+        // Show modal, hide button
+        chatShowBtn.addEventListener('click', () => {
+            chatModal.classList.remove('hidden');
+            chatShowBtn.classList.add('hidden');
+        });
+        // Hide modal, show button
+        chatToggleBtn.addEventListener('click', () => {
+            chatModal.classList.add('hidden');
+            chatShowBtn.classList.remove('hidden');
+        });
+        // ESC to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !chatModal.classList.contains('hidden')) {
+                chatModal.classList.add('hidden');
+                chatShowBtn.classList.remove('hidden');
+            }
+        });
+    }
+
     // Animate cards on initial load
     animateCards();
 });
