@@ -3,7 +3,7 @@ const axios = require('axios');
 const router = express.Router();
 
 // Proxy POST /api/forum-chat to auth service
-router.post('/forum-chat', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { message, username, userId } = req.body;
     // Forward to auth service
@@ -23,7 +23,7 @@ router.post('/forum-chat', async (req, res) => {
 });
 
 // Proxy GET /api/forum-chat to auth service
-router.get('/forum-chat', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const limit = req.query.limit || 50;
     console.log(`[Forum Chat] Fetching messages with limit ${limit}...`);
