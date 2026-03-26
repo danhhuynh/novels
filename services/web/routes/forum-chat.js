@@ -26,6 +26,7 @@ router.post('/forum-chat', async (req, res) => {
 router.get('/forum-chat', async (req, res) => {
   try {
     const limit = req.query.limit || 50;
+    console
     const response = await axios.get(
       process.env.AUTH_SERVICE_URL + '/forum-chat',
       { params: { limit } }
