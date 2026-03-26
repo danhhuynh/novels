@@ -5,6 +5,7 @@ require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 // Assuming your router is in the same directory or adjust path accordingly
 const authRouter = require('./routes/auth');
+const forumChatRouter = require('./routes/forum-chat');
 
 const app = express();
 const PORT = process.env.PORT || 3003;
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- 4. ROUTES ---
 app.use('/auth', authRouter);
+app.use('/forum-chat', forumChatRouter);
 
 // Health check
 app.get('/health', (req, res) => {
