@@ -14,16 +14,28 @@ class ReaderAnchor {
         // Excluded inline elements like 'span' to prevent duplicate bounding rects inside block elements.
         let rawElements = Array.from(this.container.querySelectorAll('p, h2, h3, h4, h5, img, li, blockquote'));
 
-        if (rawElements.length === 0) {
-            // Backup: chunk the container's direct children
-            rawElements = Array.from(this.container.children);
+        // If the chapter is essentially a single blob of text or uses raw <br> line breaks instead of <p> tags,
+        // it makes accurate IntersectionObserver tracking literally impossible because the entire chapter is just "1 element"
+        // (hence Anchor Index constantly staying at 0). We will normalize the DOM into <p> chunks!
+        if (rawElements.length < 5) {
+            console.log('[ReaderAnchor] Low semantic element count. Normalizing DOM <br> breaks into standard <p> paragraphs...');
+            // Replace <br> tags with paragraph closures to fragment the giant text block.
+            let cleanHtml = `<p>${this.container.innerHTML.replace(/<br\s*\/?>/gi, '</p><p>')}</p>`;
+            this.container.innerHTML = cleanHtml;
+
+            // Re-query now that the DOM is properly formatted into block elements
+            rawElements = Array.from(this.container.querySelectorAll('p, h2, h3, h4, h5, img, li, blockquote'));
         }
 
-        this.elements = rawElements;
-        console.log(`[ReaderAnchor] Found ${this.elements.length} trackable elements.`);
+        // Filter out completely empty paragraphs (e.g. from back-to-back <br><br> transformations)
+        this.elements = rawElements.filter(el => {
+            return el.textContent.trim().length > 0 || el.tagName === 'IMG';
+        });
+
+        console.log(`[ReaderAnchor] Found ${this.elements.length} trackable elements after normalization and filtering.`);
 
         if (this.elements.length === 0) {
-            console.error('[ReaderAnchor] No trackable elements found inside container. HTML:', this.container.innerHTML.substring(0, 200));
+            console.warn('[ReaderAnchor] No trackable elements found inside container. Aborting tracker API.', this.container.innerHTML.substring(0, 200));
             return;
         }
 
