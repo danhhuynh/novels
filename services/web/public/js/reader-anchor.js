@@ -11,11 +11,11 @@ class ReaderAnchor {
         }
 
         // Find all trackable readable elements
-        // Expanded selector to catch divs, spans or line breaks in case the content is simple text nodes mixed with br.
-        let rawElements = Array.from(this.container.querySelectorAll('p, h2, h3, h4, img, div, span'));
+        // Excluded inline elements like 'span' to prevent duplicate bounding rects inside block elements.
+        let rawElements = Array.from(this.container.querySelectorAll('p, h2, h3, h4, h5, img, li, blockquote'));
 
         if (rawElements.length === 0) {
-            // Backup: chunk the container's children if there are no explicit tags
+            // Backup: chunk the container's direct children
             rawElements = Array.from(this.container.children);
         }
 
@@ -25,6 +25,11 @@ class ReaderAnchor {
         if (this.elements.length === 0) {
             console.error('[ReaderAnchor] No trackable elements found inside container. HTML:', this.container.innerHTML.substring(0, 200));
             return;
+        }
+
+        // Disable native browser scroll restoration to prevent fighting with our custom JS anchor system
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
         }
 
         // Assign static ID/indices for reliable tracking across resize
@@ -109,22 +114,27 @@ class ReaderAnchor {
     startSaveLoop() {
         console.log(`[ReaderAnchor] Starting auto-save loop to key: ${this.storageKey}`);
         // Throttled interval save every 10s
-        setInterval(() => {
-            if (this.anchorIndex !== null && this.anchorIndex !== this.lastSavedIndex) {
-                const scrollPercentage = this.getScrollProgress();
+        setInterval(() => this.forceSave(), 10000);
 
-                // If the user reaches the bottom (~99%), clear the saved memory
-                if (scrollPercentage >= 99) {
-                    console.log('[ReaderAnchor] Reached bottom (>=99%). Clearing saved state.');
-                    localStorage.removeItem(this.storageKey);
-                    this.lastSavedIndex = null;
-                } else {
-                    console.log(`[ReaderAnchor] Auto-saving progress. Anchor Index: ${this.anchorIndex}, Progress: ${Math.round(scrollPercentage)}%`);
-                    localStorage.setItem(this.storageKey, this.anchorIndex.toString());
-                    this.lastSavedIndex = this.anchorIndex;
-                }
+        // Save exactly upon page reload/exit to ensure 100% accurate position
+        window.addEventListener('beforeunload', () => this.forceSave());
+    }
+
+    forceSave() {
+        if (this.anchorIndex !== null && this.anchorIndex !== this.lastSavedIndex) {
+            const scrollPercentage = this.getScrollProgress();
+
+            // If the user reaches the bottom (~99%), clear the saved memory
+            if (scrollPercentage >= 99) {
+                console.log('[ReaderAnchor] Reached bottom (>=99%). Clearing saved state.');
+                localStorage.removeItem(this.storageKey);
+                this.lastSavedIndex = null;
+            } else {
+                console.log(`[ReaderAnchor] Auto-saving progress. Anchor Index: ${this.anchorIndex}, Progress: ${Math.round(scrollPercentage)}%`);
+                localStorage.setItem(this.storageKey, this.anchorIndex.toString());
+                this.lastSavedIndex = this.anchorIndex;
             }
-        }, 10000);
+        }
     }
 
     restorePosition() {
@@ -139,16 +149,16 @@ class ReaderAnchor {
                 const targetEl = this.elements[savedIndex];
                 if (targetEl) {
                     console.log(`[ReaderAnchor] Restoring position to element at index: ${savedIndex}`);
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    targetEl.scrollIntoView({ behavior: 'auto', block: 'start' });
 
                     // Show a toast when successfully resumed not from the very beginning
-                    if (savedIndex > 2) {
+                    if (savedIndex > 0) {
                         this.showToast();
                     }
                 } else {
                     console.warn(`[ReaderAnchor] Saved index ${savedIndex} exceeds available elements (${this.elements.length}).`);
                 }
-            }, 500);
+            }, 300);
         }
     }
 
