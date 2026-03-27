@@ -1,0 +1,48 @@
+#reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #818cf8, #2dd4bf);
+    width: 0%;
+    z-index: 99999;
+    transition: width 0.1s ease-out;
+    pointer-events: none;
+    box-shadow: 0 0 8px rgba(45, 212, 191, 0.5);
+}
+
+#resume-toast {
+    position: fixed;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.85);
+    color: #f8fafc;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 100000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+#resume-toast.show {
+    bottom: 30px;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Adjust for mobile sticky nav which might overlap */
+@media (max-width: 768px) {
+    #resume-toast.show {
+        bottom: 80px;
+    }
+}
